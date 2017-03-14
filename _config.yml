@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: Creative Coding
+subtitle: A Creative Writer's Guide to Code
+author: Sammy Steiner
 simple_search: https://www.google.com/search
-description:
+description: This is my collections of thoughts and insights as I learn to code, or a breakdown of whatever really stumped me.  
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
