@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Flatiron | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/flatiron/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-03-21T20:42:45-04:00</updated>
+  <updated>2017-03-21T20:55:28-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[What's Going on With Find, Map, and Collect in Ruby]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map/"/>
+    <link href="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/"/>
     <updated>2017-03-21T16:21:57-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map</id>
+    <id>http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby</id>
     <content type="html"><![CDATA[<h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
 
 <p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
