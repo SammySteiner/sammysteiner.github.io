@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map/</loc>
+<lastmod>2017-03-21T16:21:57-04:00</lastmod>
+</url>
+<url>
 <loc>http://sammysteiner.github.io/blog/2017/03/14/my-first-post-on-octopress/</loc>
 <lastmod>2017-03-14T19:02:43-04:00</lastmod>
 </url>
@@ -15,5 +19,23 @@
 </url>
 <url>
 <loc>http://sammysteiner.github.io/blog/categories/school/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/ruby/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/find/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/collect/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/map/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/array/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/methods/</loc>
 </url>
 </urlset>

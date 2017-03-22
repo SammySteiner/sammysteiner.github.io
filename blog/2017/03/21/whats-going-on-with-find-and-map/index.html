@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Creative Coding</title>
+  <title>What's Going on With Find, Map, and Collect in Ruby - Creative Coding</title>
   <meta name="author" content="Sammy Steiner">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sammysteiner.github.io/">
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2017/03/21/whats-going-on-with-find-and-map/">What's Going on With Find, Map, and Collect in Ruby</a></h1>
+      <h1 class="entry-title">What's Going on With Find, Map, and Collect in Ruby</h1>
     
     
       <p class="meta">
@@ -87,7 +84,7 @@
   </header>
 
 
-  <div class="entry-content"><h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
+<div class="entry-content"><h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
 
 <p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
 
@@ -262,47 +259,52 @@
 
 <p>Happy coding!</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sammy Steiner</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-03-21T16:21:57-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>4:21 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2017/03/14/my-first-post-on-octopress/">My First Post on Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-03-14T19:02:43-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>7:02 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>&ldquo;Hello, World.&rdquo;</p>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-find-and-map/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/03/14/my-first-post-on-octopress/" title="Previous Post: My First Post On Octopress">&laquo; My First Post On Octopress</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -326,6 +328,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

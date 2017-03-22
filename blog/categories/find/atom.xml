@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Flatiron | Creative Coding]]></title>
-  <link href="http://sammysteiner.github.io/blog/categories/flatiron/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Find | Creative Coding]]></title>
+  <link href="http://sammysteiner.github.io/blog/categories/find/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
   <updated>2017-03-21T20:42:45-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
@@ -128,15 +128,6 @@ multiply_array_elements_by_two([1,2,3,4,5])
 <p><em>Map</em> and <em>collect</em> are identical methods. If you want to perform some action on variables, call other methods depending on our array elements, etc., use <em>each</em>. If you want to return a new array based on some manipulation of your array, use <em>map</em>.</p>
 
 <p>Happy coding!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[My First Post on Octopress]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/03/14/my-first-post-on-octopress/"/>
-    <updated>2017-03-14T19:02:43-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/03/14/my-first-post-on-octopress</id>
-    <content type="html"><![CDATA[<p>&ldquo;Hello, World.&rdquo;</p>
 ]]></content>
   </entry>
   
