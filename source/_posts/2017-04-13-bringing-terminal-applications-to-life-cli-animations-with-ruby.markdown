@@ -12,7 +12,7 @@ While working on a command line application, with [Scott Harrison](https://githu
 
 The project we were working on was pulling data from  [NYC Open Data](https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn), specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on [gify](https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/), and we knew we had to make it happen.
 
-![Wifi clip from GIPHY](../images/giphy.gif)
+![Wifi clip from GIPHY](/assets/giphy.gif)
 
 Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user's IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn't what we did, but that would be a great project for refactoring.
 
@@ -81,4 +81,4 @@ That's it! Now you can enjoy our sweet CLI wifi animation.
 
 ## Showtime!
 
-![WiFinder gif](../images/wifinder_animation.gif)
+![WiFinder gif](/assets/wifinder_animation.gif)
