@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Terminal | Creative Coding]]></title>
+  <link href="http://sammysteiner.github.io/blog/categories/terminal/atom.xml" rel="self"/>
+  <link href="http://sammysteiner.github.io/"/>
+  <updated>2017-04-14T09:25:58-04:00</updated>
+  <id>http://sammysteiner.github.io/</id>
+  <author>
+    <name><![CDATA[Sammy Steiner]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Bringing Terminal Applications to Life: CLI Animations With Ruby]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/"/>
+    <updated>2017-04-13T17:46:02-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby</id>
+    <content type="html"><![CDATA[<h2>Animation in the Terminal?!</h2>
+
+<p>While working on a command line application, with <a href="https://github.com/szrharrison">Scott Harrison</a>, we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type <code>telnet towel.blinkenlights.nl</code> into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!</p>
+
+<p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically, the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
+
+<p><img src="../images/giphy.mp4" alt="Wifi clip" /></p>
+
+<p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
+
+<h2>The plan</h2>
+
+<p>Here&rsquo;s a checklist; we&rsquo;ll go into detail below:</p>
+
+<ol>
+<li>Find a clip</li>
+<li>Extract individual frames</li>
+<li>Convert each frame to ASCII</li>
+<li>Add the folder with your slides to your project</li>
+<li>Build an iterator method to loop through the frames</li>
+</ol>
+
+
+<h2>Building your files</h2>
+
+<p>First, you&rsquo;ll need a clip that you want to animate, it can be saved as a gif, or even in a video format. We downloaded ours from the link above and it is formatted as an mp4 file. Then, you&rsquo;ll need to extract the frames from your clip. There is a nifty terminal tool to do this, called <a href="https://ffmpeg.org/about.html">ffmpeg</a>, that you can read more about. You&rsquo;ll need to make some decisions about where to start stop and stop your extraction, and many frames you want per second. Our command looked something like this: <code>ffmpeg -i wifinder_animation.mov -r 5 image-%02d.jpeg</code>.</p>
+
+<p>After that it gets a bit tedious, you have to convert each image to ASCII art. Thankfully there are lots of free tools online that will do this for you. If we were dealing with a longer clip, we would have looked for a way to convert the entire folder in one go, but we just uploaded each frame to <a href="http://www.text-image.com/convert/ascii.html">this site</a>. Pro tip: name your files based on where you want your clip to start and stop, starting with something like &ldquo;1&rdquo; and counting up, so you can easily iterate through the images.</p>
+
+<p>Then just add the folder with your beautiful ASCII art frames to your repo and get ready to build an animation!</p>
+
+<h2>Building an animation</h2>
+
+<p>To get started, we&rsquo;re going to write an animation method that will loop through our images in the animation folder one time.</p>
+
+<pre><code class="Ruby">def animation
+  i = 1
+  while i &lt; 60
+    print "\033[2J"
+    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+    sleep(0.03)
+    i += 1
+  end
+end
+</code></pre>
+
+<p>First create a variable and set it to 1, then we&rsquo;ll start our iteration. For a 60 frame animation, we&rsquo;ll run our loop while our variable is less than 60. Then we&rsquo;ll clear the window by moving the cursor to the top right of the terminal window with <code>print "\033[2J"</code>. Then we&rsquo;ll loop through our animation folder, named &ldquo;ascii_animation&rdquo; in this example, using our variable to indicate the file name, 1.rb, 2.rb, 3.rb, etc, printing each line of our image to the terminal. Then we&rsquo;ll let the image stay on screen for .03 seconds &lsquo;sleep(0.03)&rsquo;. Finally we&rsquo;ll increment our iterator and begin the loop again.</p>
+
+<p>If we want to run our animation multiple times, we can just put a loop method before our method call, like this: <code>3.times { animation }</code></p>
+
+<p>Finally, if you want to freeze frame your animation somewhere in the middle, instead of the potentially boring last frame in your file, you can start another loop, this time ending at your target frame.</p>
+
+<pre><code class="Ruby">def animation_with_a_great_final_frame
+  2.times do
+    i = 1
+    while i &lt; 60
+      print "\033[2J"
+      File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+      sleep(0.03)
+      i += 1
+    end
+  end
+  i = 1
+  while i &lt; 30
+    print "\033[2J"
+    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+    sleep(0.03)
+    i += 1
+  end
+end
+</code></pre>
+
+<p>That&rsquo;s it! Now you can enjoy our sweet CLI wifi animation.</p>
+
+<h2>Showtime!</h2>
+
+<p><img src="../images/wifinder_animation.gif" alt="WiFinder gif" /></p>
+]]></content>
+  </entry>
+  
+</feed>
