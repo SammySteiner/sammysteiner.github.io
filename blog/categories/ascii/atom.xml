@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ascii | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/ascii/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-04-14T09:40:14-04:00</updated>
+  <updated>2017-04-14T10:02:35-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -24,7 +24,7 @@
 
 <p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
 
-<p><img src="../images/giphy.gif" alt="Wifi clip from GIPHY" /></p>
+<p><img src="/assets/giphy.gif" alt="Wifi clip from GIPHY" /></p>
 
 <p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
 
@@ -94,7 +94,7 @@ end
 
 <h2>Showtime!</h2>
 
-<p><img src="../images/wifinder_animation.gif" alt="WiFinder gif" /></p>
+<p><img src="/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
 ]]></content>
   </entry>
   
