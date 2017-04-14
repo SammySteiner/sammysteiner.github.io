@@ -4,7 +4,7 @@
   <title><![CDATA[Category: School | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/school/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-04-14T09:27:39-04:00</updated>
+  <updated>2017-04-14T09:39:07-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -22,9 +22,9 @@
 
 <p>While working on a command line application, with <a href="https://github.com/szrharrison">Scott Harrison</a>, we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type <code>telnet towel.blinkenlights.nl</code> into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!</p>
 
-<p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically, the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
+<p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
 
-<p><img src="../images/giphy.mp4" alt="Wifi clip" /></p>
+<p><img src="../images/giphy.gif" alt="Wifi clip from GIPHY" /></p>
 
 <p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
 
