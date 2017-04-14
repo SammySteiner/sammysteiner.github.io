@@ -10,9 +10,9 @@ categories: "Flatiron School Ruby CLI Terminal Animation ASCII"
 
 While working on a command line application, with [Scott Harrison](https://github.com/szrharrison), we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type `telnet towel.blinkenlights.nl` into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!
 
-The project we were working on was pulling data from  [NYC Open Data](https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn), specifically, the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on [gify](https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/), and we knew we had to make it happen.
+The project we were working on was pulling data from  [NYC Open Data](https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn), specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on [gify](https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/), and we knew we had to make it happen.
 
-![Wifi clip](../images/giphy.mp4)
+![Wifi clip from GIPHY](../images/giphy.gif)
 
 Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user's IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn't what we did, but that would be a great project for refactoring.
 
