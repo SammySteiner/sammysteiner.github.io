@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Flatiron | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/flatiron/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-05-01T09:56:55-04:00</updated>
+  <updated>2017-05-01T16:45:03-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -114,6 +114,35 @@
 </code></pre>
 
 <p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
+
+<h2>Bonus</h2>
+
+<p>You don&rsquo;t need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called <code>testTwo</code> that should accept two arguments, multiply them, and return the result, you can export it in your exports like <code>exports.testTwo = testTwo</code>. However, if that function just returns a helper function, called <code>multiplier(num1, num2)</code>, you would not need to export that function as well.</p>
+
+<p>Here&rsquo;s what this test looks like in test.js:
+<code>ruby
+describe ('test2', function() {
+  it('multiplies two numbers together', function() {
+    expect(myCode.testTwo(3, 5)).to.be(15)
+  })
+})
+</code></p>
+
+<p>And here is how you would pass it in index.js. Note that you do not need to export <code>multiplier</code>.</p>
+
+<pre><code class="ruby">var testTwo = function(num1, num2) {
+  return mulitplier(num1, num2)
+}
+
+var mulitplier = function(a, b) {
+  return a * b
+}
+
+if(typeof exports !== 'undefined') {
+    exports.test = test;
+    exports.testTwo = testTwo
+}
+</code></pre>
 
 <p>Special thanks to <a href="https://github.com/jjseymour">JJ</a> for guiding me through this process!</p>
 ]]></content>
