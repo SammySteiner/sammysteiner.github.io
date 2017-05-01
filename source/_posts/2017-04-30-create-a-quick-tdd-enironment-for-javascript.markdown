@@ -73,4 +73,33 @@ if(typeof exports !== 'undefined') {
 
 Now you should be passing your first test. Hurray! Now that you're up and running. The [mocha documentation](https://mochajs.org) on how to write more complex tests is a great resource.
 
+## Bonus
+You don't need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called `testTwo` that should accept two arguments, multiply them, and return the result, you can export it in your exports like `exports.testTwo = testTwo`. However, if that function just returns a helper function, called `multiplier(num1, num2)`, you would not need to export that function as well.
+
+Here's what this test looks like in test.js:
+```ruby
+describe ('test2', function() {
+  it('multiplies two numbers together', function() {
+    expect(myCode.testTwo(3, 5)).to.be(15)
+  })
+})
+```
+
+And here is how you would pass it in index.js. Note that you do not need to export `multiplier`.
+
+```ruby
+var testTwo = function(num1, num2) {
+  return mulitplier(num1, num2)
+}
+
+var mulitplier = function(a, b) {
+  return a * b
+}
+
+if(typeof exports !== 'undefined') {
+    exports.test = test;
+    exports.testTwo = testTwo
+}
+```
+
 Special thanks to [JJ](https://github.com/jjseymour) for guiding me through this process!
