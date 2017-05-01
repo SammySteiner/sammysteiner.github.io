@@ -72,3 +72,5 @@ if(typeof exports !== 'undefined') {
 ```
 
 Now you should be passing your first test. Hurray! Now that you're up and running. The [mocha documentation](https://mochajs.org) on how to write more complex tests is a great resource.
+
+Special thanks to [JJ](https://github.com/jjseymour) for guiding me through this process!
