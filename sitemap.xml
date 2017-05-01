@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/</loc>
+<lastmod>2017-04-30T20:32:44-04:00</lastmod>
+</url>
+<url>
 <loc>http://sammysteiner.github.io/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/</loc>
 <lastmod>2017-04-13T17:46:02-04:00</lastmod>
 </url>
@@ -53,5 +57,26 @@
 </url>
 <url>
 <loc>http://sammysteiner.github.io/blog/categories/ascii/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/tdd/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/test/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/driven/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/development/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/javascript/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/mocha/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/jasmine/</loc>
 </url>
 </urlset>

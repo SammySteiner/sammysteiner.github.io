@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mocha | Creative Coding]]></title>
+  <link href="http://sammysteiner.github.io/blog/categories/mocha/atom.xml" rel="self"/>
+  <link href="http://sammysteiner.github.io/"/>
+  <updated>2017-04-30T22:51:05-04:00</updated>
+  <id>http://sammysteiner.github.io/</id>
+  <author>
+    <name><![CDATA[Sammy Steiner]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Create a Quick TDD Environment for Javascript]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/"/>
+    <updated>2017-04-30T20:32:44-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript</id>
+    <content type="html"><![CDATA[<h2>Getting started</h2>
+
+<p>Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project directory, create a github repository, and then link the two. Here are the basic steps:</p>
+
+<ol>
+<li>Navigate to your development folder in Terminal.</li>
+<li>Type <code>mkdir "project-name"</code> in terminal to create a project folder.</li>
+<li>Type <code>cd "project-name"</code> in Terminal to navigate into your project directory.</li>
+<li>Type <code>git init</code> in Terminal to set up your directory as a git repository.</li>
+<li>Create a readme file by typing <code>touch README.md</code> in Terminal.</li>
+<li>Add and commit your new repository by typing <code>git add .</code> and  <code>git commit -m "first commit"</code>.</li>
+<li>To create a github repository, login to <a href="https://github.com">github</a> in your browser and navigate to <a href="https://github.com/new">github/new</a> to create a new repository.</li>
+<li>Once there, give your repository a name, use the same one as your project directory, and leave the &ldquo;Initialize this repository with a README&rdquo; option unchecked.</li>
+<li>Click &ldquo;Create Repository&rdquo;.</li>
+<li>Back in Terminal, type <code>git remote add origin git@github.com:your-git-username/your-repository-name.git</code> to set up the connection between the folder on your computer, and the repository in github.</li>
+<li>Then type <code>git push -u origin master</code> to push the files, ie. your readme, from your project folder to github.</li>
+</ol>
+
+
+<p>Now that your project is up and running, it&rsquo;s time to create a testing environment.</p>
+
+<h2>Jasmine versus Mocha</h2>
+
+<p>There are two very popular testing libraries for Javascript, Jasmine and Mocha. Both are great, and weighing the pros and cons of each is enough for another blog post. Some people have already written great articles on the topic here:</p>
+
+<ol>
+<li><a href="http://www.techtalkdc.com/which-javascript-test-library-should-you-use-qunit-vs-jasmine-vs-mocha/">Kevin Groat</a></li>
+<li><a href="https://marcofranssen.nl/jasmine-vs-mocha/">Marco Franssen</a></li>
+</ol>
+
+
+<p>I&rsquo;m more familiar with Mocha, so we&rsquo;re going to go with that.</p>
+
+<h2>Setting up Mocha</h2>
+
+<p>First we need to create our NPM dependencies, with a package.json file. There is a great walkthrough built in for us by typing <code>npm init</code> in Terminal. Just follow the promts and include a name, repo, and some other metadata in the form. That will create a package.json file in your project folder. Don&rsquo;t forget to add/commit your changes frequently.</p>
+
+<p>Create a mocha dependency in your project package.json file by typing <code>npm install --save mocha</code> in Terminal. Create a test file with <code>atom test/test.js</code>. I&rsquo;m using Atom, but you can replace that with your editor of choice.</p>
+
+<p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
+
+<p>In test.js:
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">var</span> <span class="n">expect</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">expect</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="n">var</span> <span class="n">myCode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;describe (&amp;lsquo;test&amp;rsquo;, function() {</span>
+</span><span class='line'><span class="sr">  it(&amp;lsquo;returns &amp;ldquo;Hello, world!&amp;rdquo; as a string&amp;rsquo;, function() {</span>
+</span><span class='line'><span class="sr">    expect(myCode.test()).to.be(&amp;ldquo;Hello, world!&amp;rdquo;)</span>
+</span><span class='line'><span class="sr">  })</span>
+</span><span class='line'><span class="sr">})&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="no">All</span> <span class="n">other</span> <span class="n">tests</span> <span class="n">below</span><span class="o">&lt;</span><span class="sr">/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>
+</span><span class='line'><span class="sr">In terminal: `npm install --save expect.js`</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">Now we&#39;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">to pass our first test, add the following code to index.js:</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;var test = function() {</span>
+</span><span class='line'><span class="sr">  return &amp;ldquo;Hello, world!&amp;rdquo;</span>
+</span><span class='line'><span class="sr">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
+
+<pre><code class="ruby">if(typeof exports !== 'undefined') {
+    exports.test = test
+}
+</code></pre>
+
+<p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
+]]></content>
+  </entry>
+  
+</feed>
