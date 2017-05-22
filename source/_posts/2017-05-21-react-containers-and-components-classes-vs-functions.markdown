@@ -6,20 +6,20 @@ comments: true
 categories: Flatriron School React Components Containers Functional Presentational Class
 ---
 
-## What is reafactoring?
+## What is Refactoring?
 
 First, a quick note on refactoring code for those new to the idea. Lot's of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.
 
-First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rodemap to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.
+First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rode map to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.
 
 Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we're going to stick with the readability side of refactoring for this post.
 
 
-## What is component design?
+## What is Component Design?
 
 When deep into a code project, I can get tunnel vision on the tasks I'm trying to solve. I'm deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I'm helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.
 
-## Let's build a simple app in one messy place
+## Let's Build a Simple App in One Messy Place
 
 To demo this idea, we're going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we've entered. The App will work like this:
 
@@ -126,7 +126,7 @@ export default class App extends Component {
 
 This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse's scroll wheel really quickly. Looking at the working app, it's pretty easy to see that there are three things going on. First, there's the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there's a way to organize this. There totally is!
 
-## Separating things out nicely
+## Separating Concerns Out Nicely
 
 Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We're going to organize all this into a folder called 'src'. Don't forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:
 
