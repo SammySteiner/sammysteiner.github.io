@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions/</loc>
+<lastmod>2017-05-21T21:34:14-04:00</lastmod>
+</url>
+<url>
 <loc>http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/</loc>
 <lastmod>2017-04-30T20:32:44-04:00</lastmod>
 </url>
@@ -78,5 +82,26 @@
 </url>
 <url>
 <loc>http://sammysteiner.github.io/blog/categories/jasmine/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/flatriron/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/react/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/components/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/containers/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/functional/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/presentational/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/class/</loc>
 </url>
 </urlset>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Containers | Creative Coding]]></title>
+  <link href="http://sammysteiner.github.io/blog/categories/containers/atom.xml" rel="self"/>
+  <link href="http://sammysteiner.github.io/"/>
+  <updated>2017-05-22T09:09:09-04:00</updated>
+  <id>http://sammysteiner.github.io/</id>
+  <author>
+    <name><![CDATA[Sammy Steiner]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[React Containers and Components: Classes vs Functions]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions/"/>
+    <updated>2017-05-21T21:34:14-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions</id>
+    <content type="html"><![CDATA[<h2>What is reafactoring?</h2>
+
+<p>First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.</p>
+
+<p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rodemap to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
+
+<p>Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we&rsquo;re going to stick with the readability side of refactoring for this post.</p>
+
+<h2>What is component design?</h2>
+
+<p>When deep into a code project, I can get tunnel vision on the tasks I&rsquo;m trying to solve. I&rsquo;m deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I&rsquo;m helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.</p>
+
+<h2>Let&rsquo;s build a simple app in one messy place</h2>
+
+<p>To demo this idea, we&rsquo;re going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we&rsquo;ve entered. The App will work like this:</p>
+
+<p><img src="/assets/petbook.gif" alt="PetBook demo gif" /></p>
+
+<p>We&rsquo;re using three files to build PetBook: index.html, index.js, and app.js. We&rsquo;re also using Materialize CSS for some styling. Let&rsquo;s take a look at our index.html page:</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;React Intro&lt;/title&gt;
+    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;div id="container" class="container"&gt;&lt;/div&gt;
+
+    &lt;script type="text/javascript" src='bundle.js'&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>It&rsquo;s super short and sweet. We&rsquo;re bundling our files using webpacks to make development iterations quick and painless. Otherwise, our entire app is being rendered in the container div. Next, let&rsquo;s take a look at index.js:</p>
+
+<pre><code>import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+ReactDOM.render(&lt; App /&gt;, document.getElementById('container'))
+</code></pre>
+
+<p>Another super short and sweet file. All this is doing is requiring react and react-dom and rendering the app to the index.html page by attaching its contents to the div with the id of &lsquo;container.&rsquo; Finally, let&rsquo;s take a look at where all the magic is happening. Our colossal App.js file:</p>
+
+<pre><code>import React, {Component} from 'react'
+export default class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      input: '',
+      animals: []
+    }
+  }
+
+  handleChange(e){
+    this.setState({
+      input: e.target.value
+    })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    this.setState({
+      animals: [...this.state.animals, this.state.input]
+    })
+    this.setState({
+      input: ''
+    })
+  }
+
+  render() {
+    return (
+      &lt;div className='zoobook'&gt;
+
+        &lt;nav&gt;
+          &lt;div className='nav-wrapper'&gt;
+            &lt;a className='brand-logo'&gt;
+              PetBook
+            &lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/nav&gt;
+        &lt;div className="row"&gt;
+          &lt;div className="col s6"&gt;
+            &lt;div className={'zoo-form'}&gt;
+              &lt;h3&gt;Add a Pet&lt;/h3&gt;
+              &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
+                &lt;label&gt;
+                  Animal Name:
+                  &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
+                &lt;/label&gt;
+                &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
+              &lt;/form&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div className="col s6"&gt;
+            &lt;div className='zoo-list'&gt;
+              &lt;h3&gt;Your Pets&lt;/h3&gt;
+              &lt;ul&gt;
+                {this.state.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
+              &lt;/ul&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    )
+  }
+}
+</code></pre>
+
+<p>This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse&rsquo;s scroll wheel really quickly. Looking at the working app, it&rsquo;s pretty easy to see that there are three things going on. First, there&rsquo;s the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there&rsquo;s a way to organize this. There totally is!</p>
+
+<h2>Separating things out nicely</h2>
+
+<p>Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We&rsquo;re going to organize all this into a folder called &lsquo;src&rsquo;. Don&rsquo;t forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:</p>
+
+<pre><code>import React, {Component} from 'react'
+import NavBar from './NavBar'
+import PetFormContainer from '../containers/PetFormContainer'
+function App() {
+  return (
+    &lt;div className='zoobook'&gt;
+      &lt;NavBar /&gt;
+      &lt;PetFormContainer /&gt;
+    &lt;/div&gt;
+  )
+}
+export default App
+</code></pre>
+
+<p>Short and sweet! Next is our nav bar component. The job of our nav bar is only to render the nav bar. Pretty straight forward, right! In the future. If we want to add more pages to this application, we can include this nav bar container and keep any changes consistent across our entire app just by updating this file. Here it is:</p>
+
+<pre><code>import React from 'react'
+function NavBar() {
+  return (
+    &lt;nav&gt;
+      &lt;div className='nav-wrapper'&gt;
+        &lt;a className='brand-logo'&gt;
+          PetBook
+        &lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+  )
+}
+export default NavBar
+</code></pre>
+
+<p>This is looking great so far, but we haven&rsquo;t gotten to the meat and potatoes of our petbook app yet. Here is our Pet  Form container it is a stateful classical container that inherits from the react compnent library. It&rsquo;s responsible for controlling the user input, maintaining a list of the user&rsquo;s pets in an animals array, and it is able to add a new animal from the form to the animals array and rerender the Pet List component to display the changes. Here it is:</p>
+
+<pre><code>import React, {Component} from 'react'
+import PetList from '../components/PetList'
+export default class PetFormContainer extends Component {
+  constructor() {
+    super()
+    this.state = {
+      input: '',
+      animals: []
+    }
+  }
+  handleChange(e){
+    this.setState({
+      input: e.target.value
+    })
+  }
+  handleSubmit(e) {
+    e.preventDefault()
+    this.setState({
+      animals: [...this.state.animals, this.state.input]
+    })
+    this.setState({
+      input: ''
+    })
+  }
+  render() {
+    return (
+      &lt;div className="row"&gt;
+        &lt;div className="col s6"&gt;
+          &lt;div className={'zoo-form'}&gt;
+            &lt;h3&gt;Add a Pet&lt;/h3&gt;
+            &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
+              &lt;label&gt;
+                Animal Name:
+                &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
+              &lt;/label&gt;
+              &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;PetList animals={this.state.animals}/&gt;
+      &lt;/div&gt;
+    )
+  }
+}
+</code></pre>
+
+<p>A lot of this should look familiar from our original App.js file. This is the longest file in our new design pattern, but it is much simpler than our original App file. It is only responsible for maintaining the state, keeping an eye on the form, and sending along any new info to the Pet List component. Here&rsquo;s that final component:</p>
+
+<pre><code>import React from 'react'
+function PetList( props ) {
+  return (
+    &lt;div className="col s6"&gt;
+      &lt;div className='zoo-list'&gt;
+        &lt;h3&gt;Your Pets&lt;/h3&gt;
+        &lt;ul&gt;
+          {props.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+export default PetList
+</code></pre>
+
+<p>The only difference here is that the Pet List component is getting the animals array passed from the Pet Form container as a prop.</p>
+
+<h2>Conclusion</h2>
+
+<p>That&rsquo;s it. Our singe file app has been successfully refactored into a component and container design pattern. It will make expansion of our app much simpler by modularizing the responsibilities. It will also make the app much easier to maintain since we know exactly where to go if anything breaks. No more long scrolling sessions, straining our eyes to find a section of our app file. Happy coding!</p>
+]]></content>
+  </entry>
+  
+</feed>

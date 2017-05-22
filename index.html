@@ -9,7 +9,7 @@
   <meta name="author" content="Sammy Steiner">
 
   
-  <meta name="description" content="Getting started Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project &hellip;">
+  <meta name="description" content="What is reafactoring? First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,423 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-05-21T21:34:14-04:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>9:34 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>What is reafactoring?</h2>
+
+<p>First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.</p>
+
+<p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rodemap to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
+
+<p>Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we&rsquo;re going to stick with the readability side of refactoring for this post.</p>
+
+<h2>What is component design?</h2>
+
+<p>When deep into a code project, I can get tunnel vision on the tasks I&rsquo;m trying to solve. I&rsquo;m deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I&rsquo;m helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.</p>
+
+<h2>Let&rsquo;s build a simple app in one messy place</h2>
+
+<p>To demo this idea, we&rsquo;re going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we&rsquo;ve entered. The App will work like this:</p>
+
+<p><img src="/assets/petbook.gif" alt="PetBook demo gif" /></p>
+
+<p>We&rsquo;re using three files to build PetBook: index.html, index.js, and app.js. We&rsquo;re also using Materialize CSS for some styling. Let&rsquo;s take a look at our index.html page:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>  &lt;head&gt;
+</span><span class='line'>    &lt;meta charset="utf-8"&gt;
+</span><span class='line'>    &lt;title&gt;React Intro&lt;/title&gt;
+</span><span class='line'>    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"&gt;
+</span><span class='line'>  &lt;/head&gt;
+</span><span class='line'>  &lt;body&gt;
+</span><span class='line'>
+</span><span class='line'>    &lt;div id="container" class="container"&gt;&lt;/div&gt;
+</span><span class='line'>
+</span><span class='line'>    &lt;script type="text/javascript" src='bundle.js'&gt;&lt;/script&gt;
+</span><span class='line'>  &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s super short and sweet. We&rsquo;re bundling our files using webpacks to make development iterations quick and painless. Otherwise, our entire app is being rendered in the container div. Next, let&rsquo;s take a look at index.js:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React from 'react'
+</span><span class='line'>import ReactDOM from 'react-dom'
+</span><span class='line'>import App from './App'
+</span><span class='line'>ReactDOM.render(&lt; App /&gt;, document.getElementById('container'))</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Another super short and sweet file. All this is doing is requiring react and react-dom and rendering the app to the index.html page by attaching its contents to the div with the id of &lsquo;container.&rsquo; Finally, let&rsquo;s take a look at where all the magic is happening. Our colossal App.js file:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React, {Component} from 'react'
+</span><span class='line'>export default class App extends Component {
+</span><span class='line'>  constructor() {
+</span><span class='line'>    super()
+</span><span class='line'>    this.state = {
+</span><span class='line'>      input: '',
+</span><span class='line'>      animals: []
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  handleChange(e){
+</span><span class='line'>    this.setState({
+</span><span class='line'>      input: e.target.value
+</span><span class='line'>    })
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  handleSubmit(e) {
+</span><span class='line'>    e.preventDefault()
+</span><span class='line'>    this.setState({
+</span><span class='line'>      animals: [...this.state.animals, this.state.input]
+</span><span class='line'>    })
+</span><span class='line'>    this.setState({
+</span><span class='line'>      input: ''
+</span><span class='line'>    })
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  render() {
+</span><span class='line'>    return (
+</span><span class='line'>      &lt;div className='zoobook'&gt;
+</span><span class='line'>
+</span><span class='line'>        &lt;nav&gt;
+</span><span class='line'>          &lt;div className='nav-wrapper'&gt;
+</span><span class='line'>            &lt;a className='brand-logo'&gt;
+</span><span class='line'>              PetBook
+</span><span class='line'>            &lt;/a&gt;
+</span><span class='line'>          &lt;/div&gt;
+</span><span class='line'>        &lt;/nav&gt;
+</span><span class='line'>        &lt;div className="row"&gt;
+</span><span class='line'>          &lt;div className="col s6"&gt;
+</span><span class='line'>            &lt;div className={'zoo-form'}&gt;
+</span><span class='line'>              &lt;h3&gt;Add a Pet&lt;/h3&gt;
+</span><span class='line'>              &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
+</span><span class='line'>                &lt;label&gt;
+</span><span class='line'>                  Animal Name:
+</span><span class='line'>                  &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
+</span><span class='line'>                &lt;/label&gt;
+</span><span class='line'>                &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
+</span><span class='line'>              &lt;/form&gt;
+</span><span class='line'>            &lt;/div&gt;
+</span><span class='line'>          &lt;/div&gt;
+</span><span class='line'>
+</span><span class='line'>          &lt;div className="col s6"&gt;
+</span><span class='line'>            &lt;div className='zoo-list'&gt;
+</span><span class='line'>              &lt;h3&gt;Your Pets&lt;/h3&gt;
+</span><span class='line'>              &lt;ul&gt;
+</span><span class='line'>                {this.state.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
+</span><span class='line'>              &lt;/ul&gt;
+</span><span class='line'>            &lt;/div&gt;
+</span><span class='line'>          &lt;/div&gt;
+</span><span class='line'>
+</span><span class='line'>        &lt;/div&gt;
+</span><span class='line'>
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>    )
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse&rsquo;s scroll wheel really quickly. Looking at the working app, it&rsquo;s pretty easy to see that there are three things going on. First, there&rsquo;s the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there&rsquo;s a way to organize this. There totally is!</p>
+
+<h2>Separating things out nicely</h2>
+
+<p>Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We&rsquo;re going to organize all this into a folder called &lsquo;src&rsquo;. Don&rsquo;t forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React, {Component} from 'react'
+</span><span class='line'>import NavBar from './NavBar'
+</span><span class='line'>import PetFormContainer from '../containers/PetFormContainer'
+</span><span class='line'>function App() {
+</span><span class='line'>  return (
+</span><span class='line'>    &lt;div className='zoobook'&gt;
+</span><span class='line'>      &lt;NavBar /&gt;
+</span><span class='line'>      &lt;PetFormContainer /&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  )
+</span><span class='line'>}
+</span><span class='line'>export default App</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Short and sweet! Next is our nav bar component. The job of our nav bar is only to render the nav bar. Pretty straight forward, right! In the future. If we want to add more pages to this application, we can include this nav bar container and keep any changes consistent across our entire app just by updating this file. Here it is:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React from 'react'
+</span><span class='line'>function NavBar() {
+</span><span class='line'>  return (
+</span><span class='line'>    &lt;nav&gt;
+</span><span class='line'>      &lt;div className='nav-wrapper'&gt;
+</span><span class='line'>        &lt;a className='brand-logo'&gt;
+</span><span class='line'>          PetBook
+</span><span class='line'>        &lt;/a&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>    &lt;/nav&gt;
+</span><span class='line'>  )
+</span><span class='line'>}
+</span><span class='line'>export default NavBar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is looking great so far, but we haven&rsquo;t gotten to the meat and potatoes of our petbook app yet. Here is our Pet  Form container it is a stateful classical container that inherits from the react compnent library. It&rsquo;s responsible for controlling the user input, maintaining a list of the user&rsquo;s pets in an animals array, and it is able to add a new animal from the form to the animals array and rerender the Pet List component to display the changes. Here it is:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React, {Component} from 'react'
+</span><span class='line'>import PetList from '../components/PetList'
+</span><span class='line'>export default class PetFormContainer extends Component {
+</span><span class='line'>  constructor() {
+</span><span class='line'>    super()
+</span><span class='line'>    this.state = {
+</span><span class='line'>      input: '',
+</span><span class='line'>      animals: []
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>  handleChange(e){
+</span><span class='line'>    this.setState({
+</span><span class='line'>      input: e.target.value
+</span><span class='line'>    })
+</span><span class='line'>  }
+</span><span class='line'>  handleSubmit(e) {
+</span><span class='line'>    e.preventDefault()
+</span><span class='line'>    this.setState({
+</span><span class='line'>      animals: [...this.state.animals, this.state.input]
+</span><span class='line'>    })
+</span><span class='line'>    this.setState({
+</span><span class='line'>      input: ''
+</span><span class='line'>    })
+</span><span class='line'>  }
+</span><span class='line'>  render() {
+</span><span class='line'>    return (
+</span><span class='line'>      &lt;div className="row"&gt;
+</span><span class='line'>        &lt;div className="col s6"&gt;
+</span><span class='line'>          &lt;div className={'zoo-form'}&gt;
+</span><span class='line'>            &lt;h3&gt;Add a Pet&lt;/h3&gt;
+</span><span class='line'>            &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
+</span><span class='line'>              &lt;label&gt;
+</span><span class='line'>                Animal Name:
+</span><span class='line'>                &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
+</span><span class='line'>              &lt;/label&gt;
+</span><span class='line'>              &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
+</span><span class='line'>            &lt;/form&gt;
+</span><span class='line'>          &lt;/div&gt;
+</span><span class='line'>        &lt;/div&gt;
+</span><span class='line'>        &lt;PetList animals={this.state.animals}/&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>    )
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A lot of this should look familiar from our original App.js file. This is the longest file in our new design pattern, but it is much simpler than our original App file. It is only responsible for maintaining the state, keeping an eye on the form, and sending along any new info to the Pet List component. Here&rsquo;s that final component:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React from 'react'
+</span><span class='line'>function PetList( props ) {
+</span><span class='line'>  return (
+</span><span class='line'>    &lt;div className="col s6"&gt;
+</span><span class='line'>      &lt;div className='zoo-list'&gt;
+</span><span class='line'>        &lt;h3&gt;Your Pets&lt;/h3&gt;
+</span><span class='line'>        &lt;ul&gt;
+</span><span class='line'>          {props.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
+</span><span class='line'>        &lt;/ul&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  )
+</span><span class='line'>}
+</span><span class='line'>export default PetList</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The only difference here is that the Pet List component is getting the animals array passed from the Pet Form container as a prop.</p>
+
+<h2>Conclusion</h2>
+
+<p>That&rsquo;s it. Our singe file app has been successfully refactored into a component and container design pattern. It will make expansion of our app much simpler by modularizing the responsibilities. It will also make the app much easier to maintain since we know exactly where to go if anything breaks. No more long scrolling sessions, straining our eyes to find a section of our app file. Happy coding!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -613,6 +1030,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a>
