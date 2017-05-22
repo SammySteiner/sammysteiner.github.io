@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Class | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/class/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-05-22T09:09:09-04:00</updated>
+  <updated>2017-05-22T13:26:04-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -18,19 +18,19 @@
     <link href="http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions/"/>
     <updated>2017-05-21T21:34:14-04:00</updated>
     <id>http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions</id>
-    <content type="html"><![CDATA[<h2>What is reafactoring?</h2>
+    <content type="html"><![CDATA[<h2>What is Refactoring?</h2>
 
 <p>First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.</p>
 
-<p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rodemap to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
+<p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rode map to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
 
 <p>Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we&rsquo;re going to stick with the readability side of refactoring for this post.</p>
 
-<h2>What is component design?</h2>
+<h2>What is Component Design?</h2>
 
 <p>When deep into a code project, I can get tunnel vision on the tasks I&rsquo;m trying to solve. I&rsquo;m deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I&rsquo;m helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.</p>
 
-<h2>Let&rsquo;s build a simple app in one messy place</h2>
+<h2>Let&rsquo;s Build a Simple App in One Messy Place</h2>
 
 <p>To demo this idea, we&rsquo;re going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we&rsquo;ve entered. The App will work like this:</p>
 
@@ -134,7 +134,7 @@ export default class App extends Component {
 
 <p>This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse&rsquo;s scroll wheel really quickly. Looking at the working app, it&rsquo;s pretty easy to see that there are three things going on. First, there&rsquo;s the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there&rsquo;s a way to organize this. There totally is!</p>
 
-<h2>Separating things out nicely</h2>
+<h2>Separating Concerns Out Nicely</h2>
 
 <p>Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We&rsquo;re going to organize all this into a folder called &lsquo;src&rsquo;. Don&rsquo;t forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:</p>
 
