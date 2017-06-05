@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Algorithm | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/algorithm/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-06-05T13:11:07-04:00</updated>
+  <updated>2017-06-05T13:22:07-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -132,13 +132,32 @@ end
   number_of_monsters.times do |i|
      monsters &lt;&lt; unique_coordinates[ 3 + i]
   end
-  game_coords = {player: player, door: door, key: key, monsters: monsters}
+  game_coords = {player: {x: player[0], y: player[1]}, door: {x: door[0], y: door[1]}, key: {x: key[0], y: key[1]}, monsters: monsters.map do |monster|
+    [x: monster[0], y: monster[1]]
+  end}
 end
 </code></pre>
 
-<p>When we call this method with a grid size of two and one monster, we get the results <code>{:player=&gt;[2, 2], :door=&gt;[1, 1], :key=&gt;[1, 2], :monsters=&gt;[[2, 1]]}</code></p>
+<p>When we call this method with a grid size of two and one monster, we get the results:</p>
 
-<p>When we call this method with a grid size of four and three monsters, we get the results <code>{:player=&gt;[4, 2], :door=&gt;[1, 2], :key=&gt;[2, 4], :monsters=&gt;[[3, 2], [2, 1], [1, 4]]}</code></p>
+<pre><code class="`"> {
+   :player=&gt;{:x=&gt;2, :y=&gt;1},
+   :door=&gt;{:x=&gt;1, :y=&gt;1},
+   :key=&gt;{:x=&gt;2, :y=&gt;2},
+   :monsters=&gt;[[{:x=&gt;1, :y=&gt;2}]]
+   }``
+
+When we call this method with a grid size of four and three monsters, we get the results:
+</code></pre>
+
+<p> {
+   :player=>{:x=>2, :y=>1},
+   :door=>{:x=>4, :y=>3},
+   :key=>{:x=>4, :y=>2},
+   :monsters=>[
+    [{:x=>1, :y=>3}], [{:x=>3, :y=>4}], [{:x=>4, :y=>1}]]
+  }
+  ```</p>
 
 <p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
 
