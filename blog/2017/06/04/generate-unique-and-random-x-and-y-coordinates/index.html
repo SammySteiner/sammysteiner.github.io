@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a Game: Generate Unique and Random X and Y Coordinates - Creative Coding</title>
+  <meta name="author" content="Sammy Steiner">
+
+  
+  <meta name="description" content="Why would I need some random coordinates? I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
+  
+    <h2>A Creative Writer's Guide to Code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="sammysteiner.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Building a Game: Generate Unique and Random X and Y Coordinates</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-06-04T12:39:18-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:39 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Why would I need some random coordinates?</h2>
+
+<p>I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it will be randomly populated with a door, a key, a bunch of monsters and the player&rsquo;s starting position. My database schema is expecting an &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for each of these, but to make my game work, I need to make sure that none of these start off on the same square. It wouldn&rsquo;t be very challenging if the key and door could appear on the same spot. It wouldn&rsquo;t be fun if the player spawned on the same tile as a monster and lost the game immediately! There are lots of reasons you might want to generate a number of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size, this would work for all of them.</p>
+
+<h2>What do I want my result to look like?</h2>
+
+<p>We&rsquo;re going to start simple and build out more complexity as we get things working. As I said, I need a coordinate for the door, a key, the player and some monsters, that&rsquo;s a minimum of four coordinates and we need a board that is two squares by two squares to fit everything. In this case, I&rsquo;m using all the possible coordinates, so I want my final outcome to look something like this hash of info:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>game_coordinates = {
+</span><span class='line'>  player: {x: 1, y: 1},
+</span><span class='line'>  door: {x:1, y:2},
+</span><span class='line'>  key: {x:2, y:1},
+</span><span class='line'>  monster: [
+</span><span class='line'>  {x: 2, y: 2}
+</span><span class='line'>  ]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s zoom in on the first problem we want to solve. Getting ourselves the list of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. This sounds like we want to use an array, which we would ultimately need to iterate over to assign values. For now, our array should look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>unique_coordinates = [[1,1], [1,2], [2,1], [2,2]]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We will use this array later to assign the coordinates to the door, key, player, and monster. Let&rsquo;s break down what we are seeing. This isn&rsquo;t one simple array, it&rsquo;s an array of arrays. Each of the nested arrays represents a unique set of &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. We can also have two arrays for the x and the y values:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>x_values = [1, 1, 2, 2]
+</span><span class='line'>y_values = [1, 1, 2, 2]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we look a little closer, the arrays shouldn&rsquo;t both be in order like that. In our unique_coordinates array, they &lsquo;x&rsquo; values repeat then increment while the &lsquo;y&rsquo; values increment then repeat. So we want values that look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>x_values = [1, 1, 2, 2]
+</span><span class='line'>y_values = [1, 2, 1, 2]</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Let&rsquo;s hard code this to get started</h2>
+
+<p>Now that we have the basic building blocks for our data structure, let&rsquo;s put it together assuming we have the unique values we need. In our two by two grid, with the x_values and y_values arrays, all we need to do is a simple loop to get our unique_coordinates array, and pull off four coordinates at random:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="n">unique_coordinates_generator</span> <span class="o">=</span>
+</span><span class='line'><span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
+</span><span class='line'><span class="k">end</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># &gt;&gt;&gt; [[1,1], [1,2], [2,1], [2,2]]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Perfect! Just note that if you&rsquo;re following along, your coordinates may be in a different order, that&rsquo;s exactly what we want. They should all be unique.</p>
+
+<p>To assign each of these to our game board objects, we can do this by assigning each a value from the unique_coordinates_generator. This isn&rsquo;t the prettiest way to do this, but it will work.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="n">player</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="n">door</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+</span><span class='line'><span class="n">key</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
+</span><span class='line'><span class="n">monsters</span> <span class="o">=</span> <span class="o">[</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>this looks great. The next step is to abstract this to handle grids of any size, with more than four coordinates to accommodate multiple monsters.</p>
+
+<h2>Abstraction</h2>
+
+<p>To state our problem here more simply, we want to create our x_values and y_values arrays for grids larger than two by two. That means, the size of the grid would need to be an argument. Additionally we can infer from the fact that we need to accommodate a variable number of monsters that the number of monsters will also be an argument. So the skeleton of our code should look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="k">def</span> <span class="nf">coord_generator</span><span class="p">(</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># some code that creates:</span>
+</span><span class='line'>  <span class="c1"># x values from 1 to the grid size, where we get a 1 the grid_size number of times, followed by a 2 the grid_size number of times, etc.</span>
+</span><span class='line'>  <span class="c1"># y values that count from 1 to the grid_size number for the grid_size number of times.</span>
+</span><span class='line'>  <span class="c1"># then we map over the arrays like we did before.</span>
+</span><span class='line'>  <span class="c1"># finally we sample the array with the number of monsters</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that we&rsquo;ve stubbed that out in sudo code. It is really easy to translate that to code using some simple ruby operators:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="k">def</span> <span class="nf">coord_generator</span><span class="p">(</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">x_values</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">.</span><span class="n">.grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="o">*</span> <span class="n">grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">y_values</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span><span class="o">.</span><span class="n">.grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span> <span class="o">*</span> <span class="n">grid_size</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">unique_coordinates</span> <span class="o">=</span> <span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
+</span><span class='line'>      <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">unique_coordinates</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
+
+<p>Good luck and happy coding!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sammy Steiner</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-06-04T12:39:18-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:39 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/" title="Previous Post: React Containers and Components: classes vs functions">&laquo; React Containers and Components: classes vs functions</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
