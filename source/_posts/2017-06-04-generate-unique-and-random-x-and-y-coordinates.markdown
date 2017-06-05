@@ -104,13 +104,33 @@ def game_coordinates(grid_size, number_of_monsters)
   number_of_monsters.times do |i|
      monsters << unique_coordinates[ 3 + i]
   end
-  game_coords = {player: player, door: door, key: key, monsters: monsters}
+  game_coords = {player: {x: player[0], y: player[1]}, door: {x: door[0], y: door[1]}, key: {x: key[0], y: key[1]}, monsters: monsters.map do |monster|
+    [x: monster[0], y: monster[1]]
+  end}
 end
 ```
 
-When we call this method with a grid size of two and one monster, we get the results `{:player=>[2, 2], :door=>[1, 1], :key=>[1, 2], :monsters=>[[2, 1]]}`
+When we call this method with a grid size of two and one monster, we get the results:
 
-When we call this method with a grid size of four and three monsters, we get the results `{:player=>[4, 2], :door=>[1, 2], :key=>[2, 4], :monsters=>[[3, 2], [2, 1], [1, 4]]}`
+ ```
+ {
+   :player=>{:x=>2, :y=>1},
+   :door=>{:x=>1, :y=>1},
+   :key=>{:x=>2, :y=>2},
+   :monsters=>[[{:x=>1, :y=>2}]]
+   }```
+
+When we call this method with a grid size of four and three monsters, we get the results:
+
+ ```
+ {
+   :player=>{:x=>2, :y=>1},
+   :door=>{:x=>4, :y=>3},
+   :key=>{:x=>4, :y=>2},
+   :monsters=>[
+    [{:x=>1, :y=>3}], [{:x=>3, :y=>4}], [{:x=>4, :y=>1}]]
+  }
+  ```
 
 We've done it! We started with a scary sounding requirement, "generate a number of random and unique 'x' and 'y' coordinates for a grid of a given size." We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.
 
