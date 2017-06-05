@@ -4,7 +4,7 @@
   <title><![CDATA[Category: School | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/school/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-06-04T22:55:57-04:00</updated>
+  <updated>2017-06-05T13:11:07-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -103,7 +103,7 @@ def coord_generator(grid_size, number_of_monsters)
   # x values from 1 to the grid size, where we get a 1 the grid_size number of times, followed by a 2 the grid_size number of times, etc.
   # y values that count from 1 to the grid_size number for the grid_size number of times.
   # then we map over the arrays like we did before.
-  # finally we sample the array with the number of monsters
+  # finally we sample the array with the number of monsters plus the door, key, and player.
 end
 </code></p>
 
@@ -115,11 +115,30 @@ end
     unique_coordinates = x_values.each_with_index.map do |x, index|
       [x, y_values[index]]
     end
-    unique_coordinates.sample(number_of_monsters)
+    unique_coordinates.sample(number_of_monsters + 3)
   end
 </code></pre>
 
 <h2>Conclusion</h2>
+
+<p>We&rsquo;ve almost finished, but we still have one thing left to do, we need to output our game_coordinates object. To do that, we need to assign the values like we demonstrated above, but we also need to account for having several monsters.</p>
+
+<pre><code class="Ruby">def game_coordinates(grid_size, number_of_monsters)
+  unique_coordinates = coord_generator(grid_size, number_of_monsters)
+  player = unique_coordinates[0]
+  door = unique_coordinates[1]
+  key = unique_coordinates[2]
+  monsters = []
+  number_of_monsters.times do |i|
+     monsters &lt;&lt; unique_coordinates[ 3 + i]
+  end
+  game_coords = {player: player, door: door, key: key, monsters: monsters}
+end
+</code></pre>
+
+<p>When we call this method with a grid size of two and one monster, we get the results <code>{:player=&gt;[2, 2], :door=&gt;[1, 1], :key=&gt;[1, 2], :monsters=&gt;[[2, 1]]}</code></p>
+
+<p>When we call this method with a grid size of four and three monsters, we get the results <code>{:player=&gt;[4, 2], :door=&gt;[1, 2], :key=&gt;[2, 4], :monsters=&gt;[[3, 2], [2, 1], [1, 4]]}</code></p>
 
 <p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-06-04T22:55:57-04:00</updated>
+  <updated>2017-06-05T13:11:07-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -116,7 +116,7 @@
 </span><span class='line'>  <span class="c1"># x values from 1 to the grid size, where we get a 1 the grid_size number of times, followed by a 2 the grid_size number of times, etc.</span>
 </span><span class='line'>  <span class="c1"># y values that count from 1 to the grid_size number for the grid_size number of times.</span>
 </span><span class='line'>  <span class="c1"># then we map over the arrays like we did before.</span>
-</span><span class='line'>  <span class="c1"># finally we sample the array with the number of monsters</span>
+</span><span class='line'>  <span class="c1"># finally we sample the array with the number of monsters plus the door, key, and player.</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -137,12 +137,43 @@
 </span><span class='line'>    <span class="n">unique_coordinates</span> <span class="o">=</span> <span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
 </span><span class='line'>      <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
 </span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">unique_coordinates</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">unique_coordinates</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">number_of_monsters</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
 </span><span class='line'>  <span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <h2>Conclusion</h2>
+
+<p>We&rsquo;ve almost finished, but we still have one thing left to do, we need to output our game_coordinates object. To do that, we need to assign the values like we demonstrated above, but we also need to account for having several monsters.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="k">def</span> <span class="nf">game_coordinates</span><span class="p">(</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">unique_coordinates</span> <span class="o">=</span> <span class="n">coord_generator</span><span class="p">(</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">number_of_monsters</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">player</span> <span class="o">=</span> <span class="n">unique_coordinates</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">door</span> <span class="o">=</span> <span class="n">unique_coordinates</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">key</span> <span class="o">=</span> <span class="n">unique_coordinates</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">monsters</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'>  <span class="n">number_of_monsters</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+</span><span class='line'>     <span class="n">monsters</span> <span class="o">&lt;&lt;</span> <span class="n">unique_coordinates</span><span class="o">[</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">game_coords</span> <span class="o">=</span> <span class="p">{</span><span class="ss">player</span><span class="p">:</span> <span class="n">player</span><span class="p">,</span> <span class="ss">door</span><span class="p">:</span> <span class="n">door</span><span class="p">,</span> <span class="ss">key</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="ss">monsters</span><span class="p">:</span> <span class="n">monsters</span><span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we call this method with a grid size of two and one monster, we get the results <code>{:player=&gt;[2, 2], :door=&gt;[1, 1], :key=&gt;[1, 2], :monsters=&gt;[[2, 1]]}</code></p>
+
+<p>When we call this method with a grid size of four and three monsters, we get the results <code>{:player=&gt;[4, 2], :door=&gt;[1, 2], :key=&gt;[2, 4], :monsters=&gt;[[3, 2], [2, 1], [1, 4]]}</code></p>
 
 <p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
 
