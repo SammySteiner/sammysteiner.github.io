@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Algorithm | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/algorithm/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-06-05T13:22:07-04:00</updated>
+  <updated>2017-06-05T13:31:21-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -145,7 +145,7 @@ end
    :door=&gt;{:x=&gt;1, :y=&gt;1},
    :key=&gt;{:x=&gt;2, :y=&gt;2},
    :monsters=&gt;[[{:x=&gt;1, :y=&gt;2}]]
-   }``
+   }```
 
 When we call this method with a grid size of four and three monsters, we get the results:
 </code></pre>
