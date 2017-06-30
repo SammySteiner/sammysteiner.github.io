@@ -18,151 +18,170 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sammysteiner.github.io/blog/categories/ascii/">
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/categories/ascii">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
   
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Creative Coding</a></h1>
-  
-    <h2>A Creative Writer's Guide to Code</h2>
-  
-</hgroup>
+  <body>
+    <div class="all-posts">
+  <div class="container">
+    <div class="row">
+      <div class="list-title col-md-offset-2 col-md-8">
+        <h4>Posts in ascii</h4>
+      </div>
+    </div>
+  </div>
 
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <div class="article-list">
+    <div class="container">
+      
+        
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <article>
+  <h2><a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a></h2>
   
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="sammysteiner.github.io">
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+  <p>
+    <h2>Animation in the Terminal?!</h2>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article role="article">
-  
-  <header>
-    <h1 class="entry-title">Category: Ascii</h1>
+<p>While working on a command line application, with <a href="https://github.com/szrharrison">Scott Harrison</a>, we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type <code>telnet towel.blinkenlights.nl</code> into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!</p>
+
+<p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
+
+<p><img src="/assets/giphy.gif" alt="Wifi clip from GIPHY" /></p>
+
+<p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
+
+<h2>The plan</h2>
+
+<p>Here&rsquo;s a checklist; we&rsquo;ll go into detail below:</p>
+
+<ol>
+<li>Find a clip</li>
+<li>Extract individual frames</li>
+<li>Convert each frame to ASCII</li>
+<li>Add the folder with your slides to your project</li>
+<li>Build an iterator method to loop through the frames</li>
+</ol>
+
+
+<h2>Building your files</h2>
+
+<p>First, you&rsquo;ll need a clip that you want to animate, it can be saved as a gif, or even in a video format. We downloaded ours from the link above and it is formatted as an mp4 file. Then, you&rsquo;ll need to extract the frames from your clip. There is a nifty terminal tool to do this, called <a href="https://ffmpeg.org/about.html">ffmpeg</a>, that you can read more about. You&rsquo;ll need to make some decisions about where to start stop and stop your extraction, and many frames you want per second. Our command looked something like this: <code>ffmpeg -i wifinder_animation.mov -r 5 image-%02d.jpeg</code>.</p>
+
+<p>After that it gets a bit tedious, you have to convert each image to ASCII art. Thankfully there are lots of free tools online that will do this for you. If we were dealing with a longer clip, we would have looked for a way to convert the entire folder in one go, but we just uploaded each frame to <a href="http://www.text-image.com/convert/ascii.html">this site</a>. Pro tip: name your files based on where you want your clip to start and stop, starting with something like &ldquo;1&rdquo; and counting up, so you can easily iterate through the images.</p>
+
+<p>Then just add the folder with your beautiful ASCII art frames to your repo and get ready to build an animation!</p>
+
+<h2>Building an animation</h2>
+
+<p>To get started, we&rsquo;re going to write an animation method that will loop through our images in the animation folder one time.</p>
+
+<pre><code class="Ruby">def animation
+  i = 1
+  while i &lt; 60
+    print "\033[2J"
+    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+    sleep(0.03)
+    i += 1
+  end
+end
+</code></pre>
+
+<p>First create a variable and set it to 1, then we&rsquo;ll start our iteration. For a 60 frame animation, we&rsquo;ll run our loop while our variable is less than 60. Then we&rsquo;ll clear the window by moving the cursor to the top right of the terminal window with <code>print "\033[2J"</code>. Then we&rsquo;ll loop through our animation folder, named &ldquo;ascii_animation&rdquo; in this example, using our variable to indicate the file name, 1.rb, 2.rb, 3.rb, etc, printing each line of our image to the terminal. Then we&rsquo;ll let the image stay on screen for .03 seconds &lsquo;sleep(0.03)&rsquo;. Finally we&rsquo;ll increment our iterator and begin the loop again.</p>
+
+<p>If we want to run our animation multiple times, we can just put a loop method before our method call, like this: <code>3.times { animation }</code></p>
+
+<p>Finally, if you want to freeze frame your animation somewhere in the middle, instead of the potentially boring last frame in your file, you can start another loop, this time ending at your target frame.</p>
+
+<pre><code class="Ruby">def animation_with_a_great_final_frame
+  2.times do
+    i = 1
+    while i &lt; 60
+      print "\033[2J"
+      File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+      sleep(0.03)
+      i += 1
+    end
+  end
+  i = 1
+  while i &lt; 30
+    print "\033[2J"
+    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
+    sleep(0.03)
+    i += 1
+  end
+end
+</code></pre>
+
+<p>That&rsquo;s it! Now you can enjoy our sweet CLI wifi animation.</p>
+
+<h2>Showtime!</h2>
+
+<p><img src="/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
+
+  </p>
+  <span class="meta">
     
-  </header>
+
+
+
+
+
+
+
+
   
-  <div id="blog-archives" class="category">
 
 
+
+<time datetime="2017-04-13T17:46:02-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/animation/'>animation</a>, <a class='category' href='/blog/categories/ascii/'>ascii</a>, <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a>
+  
+</span>
+
+
+  </span>
 
   
-  <h2>2017</h2>
-
-<article>
-  
-<h1><a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a></h1>
-<time datetime="2017-04-13T17:46:02-04:00" pubdate><span class='month'>Apr</span> <span class='day'>13</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/animation/'>animation</a>, <a class='category' href='/blog/categories/ascii/'>ascii</a>, <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a></span>
-</footer>
-
-
 </article>
 
+          </div>
+        </div>
+      
+    </div>
+  </div>
 </div>
 
-  
-</article>
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+  <span>
+  Powered by <a href="http://octopress.org/">Octopress</a>. Design based on the lovely <a href="https://github.com/sevenadrian/MediumFox">MediumFox</a>.
+</span>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
-  
-</aside>
-
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - Sammy Steiner -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
 </footer>
-  
+
+    
 
 
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>

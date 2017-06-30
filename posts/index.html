@@ -1,30 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Creative Coding]]></title>
-  <link href="http://sammysteiner.github.io/atom.xml" rel="self"/>
-  <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-06-30T09:50:34-04:00</updated>
-  <id>http://sammysteiner.github.io/</id>
-  <author>
-    <name><![CDATA[Sammy Steiner]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>All Posts - Creative Coding</title>
+  <meta name="author" content="Sammy Steiner">
 
   
-  <entry>
-    <title type="html"><![CDATA[Building a Game: Generate Unique and Random X and Y Coordinates]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/"/>
-    <updated>2017-06-04T12:39:18-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates</id>
-    <content type="html"><![CDATA[<h2>Why would I need some random coordinates?</h2>
+  <meta name="description" content="All Posts Building a Game: Generate Unique and Random X and Y Coordinates Why would I need some random coordinates? I want to build a game. This &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sammysteiner.github.io/posts">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  
+
+</head>
+
+  <body>
+    <div class="all-posts">
+  <div class="container">
+    <div class="row">
+      <div class="list-title col-md-offset-2 col-md-8">
+        <h4>All Posts</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-list">
+    <div class="container">
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a></h2>
+  
+  <p>
+    <h2>Why would I need some random coordinates?</h2>
+
+
+
 
 <p>I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it will be randomly populated with a door, a key, a bunch of monsters and the player&rsquo;s starting position. My database schema is expecting an &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for each of these, but to make my game work, I need to make sure that none of these start off on the same square. It wouldn&rsquo;t be very challenging if the key and door could appear on the same spot. It wouldn&rsquo;t be fun if the player spawned on the same tile as a monster and lost the game immediately! There are lots of reasons you might want to generate a number of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size, this would work for all of them.</p>
 
+
+
+
 <h2>What do I want my result to look like?</h2>
 
+
+
+
 <p>We&rsquo;re going to start simple and build out more complexity as we get things working. As I said, I need a coordinate for the door, a key, the player and some monsters, that&rsquo;s a minimum of four coordinates and we need a board that is two squares by two squares to fit everything. In this case, I&rsquo;m using all the possible coordinates, so I want my final outcome to look something like this hash of info:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -44,13 +88,23 @@
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Let&rsquo;s zoom in on the first problem we want to solve. Getting ourselves the list of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. This sounds like we want to use an array, which we would ultimately need to iterate over to assign values. For now, our array should look like this:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>unique_coordinates = [[1,1], [1,2], [2,1], [2,2]]</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>We will use this array later to assign the coordinates to the door, key, player, and monster. Let&rsquo;s break down what we are seeing. This isn&rsquo;t one simple array, it&rsquo;s an array of arrays. Each of the nested arrays represents a unique set of &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. We can also have two arrays for the x and the y values:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -58,7 +112,12 @@
 </span><span class='line'>y_values = [1, 1, 2, 2]</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>If we look a little closer, the arrays shouldn&rsquo;t both be in order like that. In our unique_coordinates array, they &lsquo;x&rsquo; values repeat then increment while the &lsquo;y&rsquo; values increment then repeat. So we want values that look like this:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -66,9 +125,17 @@
 </span><span class='line'>y_values = [1, 2, 1, 2]</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Let&rsquo;s hard code this to get started</h2>
 
+
+
+
 <p>Now that we have the basic building blocks for our data structure, let&rsquo;s put it together assuming we have the unique values we need. In our two by two grid, with the x_values and y_values arrays, all we need to do is a simple loop to get our unique_coordinates array, and pull off four coordinates at random:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -83,9 +150,17 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Perfect! Just note that if you&rsquo;re following along, your coordinates may be in a different order, that&rsquo;s exactly what we want. They should all be unique.</p>
 
+
+
+
 <p>To assign each of these to our game board objects, we can do this by assigning each a value from the unique_coordinates_generator. This isn&rsquo;t the prettiest way to do this, but it will work.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -98,11 +173,22 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>this looks great. The next step is to abstract this to handle grids of any size, with more than four coordinates to accommodate multiple monsters.</p>
+
+
+
 
 <h2>Abstraction</h2>
 
+
+
+
 <p>To state our problem here more simply, we want to create our x_values and y_values arrays for grids larger than two by two. That means, the size of the grid would need to be an argument. Additionally we can infer from the fact that we need to accommodate a variable number of monsters that the number of monsters will also be an argument. So the skeleton of our code should look something like this:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -121,7 +207,12 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Now that we&rsquo;ve stubbed that out in sudo code. It is really easy to translate that to code using some simple ruby operators:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -142,9 +233,17 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <h2>Conclusion</h2>
 
+
+
+
 <p>We&rsquo;ve almost finished, but we still have one thing left to do, we need to output our game_coordinates object. To do that, we need to assign the values like we demonstrated above, but we also need to account for having several monsters.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -175,7 +274,12 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>When we call this method with a grid size of two and one monster, we get the results:</p>
+
+
+
 
 <pre><code class="`"> {
    :player=&gt;{:x=&gt;2, :y=&gt;1},
@@ -187,6 +291,9 @@
 When we call this method with a grid size of four and three monsters, we get the results:
 </code></pre>
 
+
+
+
 <p> {
    :player=>{:x=>2, :y=>1},
    :door=>{:x=>4, :y=>3},
@@ -196,36 +303,107 @@ When we call this method with a grid size of four and three monsters, we get the
   }
   ```</p>
 
+
+
+
 <p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
 
+
+
+
 <p>Good luck and happy coding!</p>
-]]></content>
-  </entry>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[React Containers and Components: Classes vs Functions]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions/"/>
-    <updated>2017-05-21T21:34:14-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/05/21/react-containers-and-components-classes-vs-functions</id>
-    <content type="html"><![CDATA[<h2>What is Refactoring?</h2>
+
+
+
+<time datetime="2017-06-04T12:39:18-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a></h2>
+  
+  <p>
+    <h2>What is Refactoring?</h2>
+
+
+
 
 <p>First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.</p>
 
+
+
+
 <p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rode map to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
+
+
+
 
 <p>Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we&rsquo;re going to stick with the readability side of refactoring for this post.</p>
 
+
+
+
 <h2>What is Component Design?</h2>
+
+
+
 
 <p>When deep into a code project, I can get tunnel vision on the tasks I&rsquo;m trying to solve. I&rsquo;m deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I&rsquo;m helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.</p>
 
+
+
+
 <h2>Let&rsquo;s Build a Simple App in One Messy Place</h2>
+
+
+
 
 <p>To demo this idea, we&rsquo;re going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we&rsquo;ve entered. The App will work like this:</p>
 
-<p><img src="http://sammysteiner.github.io/assets/petbook.gif" alt="PetBook demo gif" /></p>
+
+
+
+<p><img src="/assets/petbook.gif" alt="PetBook demo gif" /></p>
+
+
+
 
 <p>We&rsquo;re using three files to build PetBook: index.html, index.js, and app.js. We&rsquo;re also using Materialize CSS for some styling. Let&rsquo;s take a look at our index.html page:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -257,7 +435,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>It&rsquo;s super short and sweet. We&rsquo;re bundling our files using webpacks to make development iterations quick and painless. Otherwise, our entire app is being rendered in the container div. Next, let&rsquo;s take a look at index.js:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -269,7 +452,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>ReactDOM.render(&lt; App /&gt;, document.getElementById('container'))</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Another super short and sweet file. All this is doing is requiring react and react-dom and rendering the app to the index.html page by attaching its contents to the div with the id of &lsquo;container.&rsquo; Finally, let&rsquo;s take a look at where all the magic is happening. Our colossal App.js file:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -405,11 +593,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse&rsquo;s scroll wheel really quickly. Looking at the working app, it&rsquo;s pretty easy to see that there are three things going on. First, there&rsquo;s the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there&rsquo;s a way to organize this. There totally is!</p>
+
+
+
 
 <h2>Separating Concerns Out Nicely</h2>
 
+
+
+
 <p>Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We&rsquo;re going to organize all this into a folder called &lsquo;src&rsquo;. Don&rsquo;t forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -437,7 +636,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>export default App</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Short and sweet! Next is our nav bar component. The job of our nav bar is only to render the nav bar. Pretty straight forward, right! In the future. If we want to add more pages to this application, we can include this nav bar container and keep any changes consistent across our entire app just by updating this file. Here it is:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -467,7 +671,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>export default NavBar</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>This is looking great so far, but we haven&rsquo;t gotten to the meat and potatoes of our petbook app yet. Here is our Pet  Form container it is a stateful classical container that inherits from the react compnent library. It&rsquo;s responsible for controlling the user input, maintaining a list of the user&rsquo;s pets in an animals array, and it is able to add a new animal from the form to the animals array and rerender the Pet List component to display the changes. Here it is:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -559,7 +768,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>A lot of this should look familiar from our original App.js file. This is the longest file in our new design pattern, but it is much simpler than our original App file. It is only responsible for maintaining the state, keeping an eye on the form, and sending along any new info to the Pet List component. Here&rsquo;s that final component:</p>
+
+
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -591,22 +805,71 @@ When we call this method with a grid size of four and three monsters, we get the
 </span><span class='line'>export default PetList</span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The only difference here is that the Pet List component is getting the animals array passed from the Pet Form container as a prop.</p>
+
+
+
 
 <h2>Conclusion</h2>
 
+
+
+
 <p>That&rsquo;s it. Our singe file app has been successfully refactored into a component and container design pattern. It will make expansion of our app much simpler by modularizing the responsibilities. It will also make the app much easier to maintain since we know exactly where to go if anything breaks. No more long scrolling sessions, straining our eyes to find a section of our app file. Happy coding!</p>
-]]></content>
-  </entry>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[Create a Quick TDD Environment for Javascript]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/"/>
-    <updated>2017-04-30T20:32:44-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript</id>
-    <content type="html"><![CDATA[<h2>Getting started</h2>
+
+
+
+<time datetime="2017-05-21T21:34:14-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/class/'>class</a>, <a class='category' href='/blog/categories/components/'>components</a>, <a class='category' href='/blog/categories/containers/'>containers</a>, <a class='category' href='/blog/categories/flatriron/'>flatriron</a>, <a class='category' href='/blog/categories/functional/'>functional</a>, <a class='category' href='/blog/categories/presentational/'>presentational</a>, <a class='category' href='/blog/categories/react/'>react</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a></h2>
+  
+  <p>
+    <h2>Getting started</h2>
+
+
+
 
 <p>Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project directory, create a github repository, and then link the two. Here are the basic steps:</p>
+
+
+
 
 <ol>
 <li>Navigate to your development folder in Terminal.</li>
@@ -623,11 +886,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </ol>
 
 
+
+
 <p>Now that your project is up and running, it&rsquo;s time to create a testing environment.</p>
+
+
+
 
 <h2>Jasmine versus Mocha</h2>
 
+
+
+
 <p>There are two very popular testing libraries for Javascript, Jasmine and Mocha. Both are great, and weighing the pros and cons of each is enough for another blog post. Some people have already written great articles on the topic here:</p>
+
+
+
 
 <ol>
 <li><a href="http://www.techtalkdc.com/which-javascript-test-library-should-you-use-qunit-vs-jasmine-vs-mocha/">Kevin Groat</a></li>
@@ -635,17 +909,37 @@ When we call this method with a grid size of four and three monsters, we get the
 </ol>
 
 
+
+
 <p>I&rsquo;m more familiar with Mocha, so we&rsquo;re going to go with that.</p>
+
+
+
 
 <h2>Setting up Mocha</h2>
 
+
+
+
 <p>First we need to create our NPM dependencies, with a package.json file. There is a great walkthrough built in for us by typing <code>npm init</code> in Terminal. Just follow the promts and include a name, repo, and some other metadata in the form. That will create a package.json file in your project folder. Don&rsquo;t forget to add/commit your changes frequently.</p>
+
+
+
 
 <p>Create a mocha dependency in your project package.json file by typing <code>npm install --save mocha</code> in Terminal. Create a test file with <code>atom test/test.js</code>. I&rsquo;m using Atom, but you can replace that with your editor of choice.</p>
 
+
+
+
 <p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
 
+
+
+
 <p>In test.js:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -670,11 +964,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>In terminal: <code>npm install --save expect.js</code></p>
+
+
+
 
 <p>Now we&rsquo;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</p>
 
+
+
+
 <p>to pass our first test, add the following code to index.js:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -685,7 +990,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -696,13 +1006,27 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
+
+
+
 
 <h2>Bonus</h2>
 
+
+
+
 <p>You don&rsquo;t need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called <code>testTwo</code> that should accept two arguments, multiply them, and return the result, you can export it in your exports like <code>exports.testTwo = testTwo</code>. However, if that function just returns a helper function, called <code>multiplier(num1, num2)</code>, you would not need to export that function as well.</p>
 
+
+
+
 <p>Here&rsquo;s what this test looks like in test.js:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -717,7 +1041,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>And here is how you would pass it in index.js. Note that you do not need to export <code>multiplier</code>.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -746,28 +1075,86 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Special thanks to <a href="https://github.com/jjseymour">JJ</a> for guiding me through this process!</p>
-]]></content>
-  </entry>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[Bringing Terminal Applications to Life: CLI Animations With Ruby]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/"/>
-    <updated>2017-04-13T17:46:02-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby</id>
-    <content type="html"><![CDATA[<h2>Animation in the Terminal?!</h2>
+
+
+
+<time datetime="2017-04-30T20:32:44-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/development/'>development</a>, <a class='category' href='/blog/categories/driven/'>driven</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/jasmine/'>jasmine</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/mocha/'>mocha</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test/'>test</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a></h2>
+  
+  <p>
+    <h2>Animation in the Terminal?!</h2>
+
+
+
 
 <p>While working on a command line application, with <a href="https://github.com/szrharrison">Scott Harrison</a>, we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type <code>telnet towel.blinkenlights.nl</code> into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!</p>
 
+
+
+
 <p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
 
-<p><img src="http://sammysteiner.github.io/assets/giphy.gif" alt="Wifi clip from GIPHY" /></p>
+
+
+
+<p><img src="/assets/giphy.gif" alt="Wifi clip from GIPHY" /></p>
+
+
+
 
 <p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
 
+
+
+
 <h2>The plan</h2>
 
+
+
+
 <p>Here&rsquo;s a checklist; we&rsquo;ll go into detail below:</p>
+
+
+
 
 <ol>
 <li>Find a clip</li>
@@ -778,17 +1165,37 @@ When we call this method with a grid size of four and three monsters, we get the
 </ol>
 
 
+
+
 <h2>Building your files</h2>
+
+
+
 
 <p>First, you&rsquo;ll need a clip that you want to animate, it can be saved as a gif, or even in a video format. We downloaded ours from the link above and it is formatted as an mp4 file. Then, you&rsquo;ll need to extract the frames from your clip. There is a nifty terminal tool to do this, called <a href="https://ffmpeg.org/about.html">ffmpeg</a>, that you can read more about. You&rsquo;ll need to make some decisions about where to start stop and stop your extraction, and many frames you want per second. Our command looked something like this: <code>ffmpeg -i wifinder_animation.mov -r 5 image-%02d.jpeg</code>.</p>
 
+
+
+
 <p>After that it gets a bit tedious, you have to convert each image to ASCII art. Thankfully there are lots of free tools online that will do this for you. If we were dealing with a longer clip, we would have looked for a way to convert the entire folder in one go, but we just uploaded each frame to <a href="http://www.text-image.com/convert/ascii.html">this site</a>. Pro tip: name your files based on where you want your clip to start and stop, starting with something like &ldquo;1&rdquo; and counting up, so you can easily iterate through the images.</p>
+
+
+
 
 <p>Then just add the folder with your beautiful ASCII art frames to your repo and get ready to build an animation!</p>
 
+
+
+
 <h2>Building an animation</h2>
 
+
+
+
 <p>To get started, we&rsquo;re going to write an animation method that will loop through our images in the animation folder one time.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -811,11 +1218,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>First create a variable and set it to 1, then we&rsquo;ll start our iteration. For a 60 frame animation, we&rsquo;ll run our loop while our variable is less than 60. Then we&rsquo;ll clear the window by moving the cursor to the top right of the terminal window with <code>print "\033[2J"</code>. Then we&rsquo;ll loop through our animation folder, named &ldquo;ascii_animation&rdquo; in this example, using our variable to indicate the file name, 1.rb, 2.rb, 3.rb, etc, printing each line of our image to the terminal. Then we&rsquo;ll let the image stay on screen for .03 seconds &lsquo;sleep(0.03)&rsquo;. Finally we&rsquo;ll increment our iterator and begin the loop again.</p>
+
+
+
 
 <p>If we want to run our animation multiple times, we can just put a loop method before our method call, like this: <code>3.times { animation }</code></p>
 
+
+
+
 <p>Finally, if you want to freeze frame your animation somewhere in the middle, instead of the potentially boring last frame in your file, you can start another loop, this time ending at your target frame.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -856,30 +1274,91 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>That&rsquo;s it! Now you can enjoy our sweet CLI wifi animation.</p>
+
+
+
 
 <h2>Showtime!</h2>
 
-<p><img src="http://sammysteiner.github.io/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
-]]></content>
-  </entry>
+
+
+
+<p><img src="/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[What's Going on With Find, Map, and Collect in Ruby]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/"/>
-    <updated>2017-03-21T16:21:57-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby</id>
-    <content type="html"><![CDATA[<h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
+
+
+
+<time datetime="2017-04-13T17:46:02-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/animation/'>animation</a>, <a class='category' href='/blog/categories/ascii/'>ascii</a>, <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h2>
+  
+  <p>
+    <h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
+
+
+
 
 <p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
 
+
+
+
 <p>FYI for the rest of the post, I&rsquo;m going to use &ldquo;<em>map</em>&rdquo; instead of <em>map</em> and <em>collect</em> because <em>map</em> and <em>collect</em> are identical. That is, they do the exact same thing. The only difference is that &ldquo;map&rdquo; is 3 characters to type but &ldquo;collect&rdquo; is more descriptive as to what’s going. You can think of it like we&rsquo;re collecting our new array elements and returning that collection as an array.</p>
+
+
+
 
 <p>If you&rsquo;re trying to do all that with <em>each</em> but adding on some <em>if</em> statements to determine what you&rsquo;re shoveling, you should look at some other methods like <em>find</em>, <em>select</em>, and many others!</p>
 
+
+
+
 <h2>Yield is awesome!</h2>
 
+
+
+
 <p>First, lets talk about what these iterator methods are doing. In order to dig into that, we need to discuss the <em>yield</em> keyword. <em>Yield</em> is a way to pass a block of code into an method with the arguments. For example, to demonstrate how <em>yield</em> interrupts a method to call on a separate block:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -908,11 +1387,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The <em>yield</em> stops the method from putting the second statement until it has a chance to call whatever argument we passed into the method with the arguments in the block on the argument we pass into <em>yield</em>. We can use <em>yield</em> with a looping method like <em>while</em> to emulate our <em>each</em> and <em>map</em> methods to get under the hood.</p>
+
+
+
 
 <h2>What is going on with Each?</h2>
 
+
+
+
 <p>Now we’ll write our own <em>each</em> method, without using “<em>each</em>.” Aside from giving us some insight into what’s actually happening with our <em>each</em> method, it will show us how much time our higher level methods are saving us.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -933,7 +1423,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>So far, we have a generic method that takes an array as an argument, as well as a block of code, sets the variable i to 0 and operates our code on each element of our array, adding 1 to the i variable, between each iteration, and stopping the <em>yield</em> when we’ve hit all the elements. We then return the original array that was passed in. We can use this to pass any block into our method with any array. Let’s give it a try:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -954,7 +1449,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>That’s exactly what we get when we hard code the block into our method using <em>each</em>.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -983,11 +1483,22 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Pretty cool, right! The <em>each</em> method allows us to user the elements in our array, and return the original array. As you can see, the <em>each</em> method is really easy to write, but a lot less flexible than the <em>yield</em> method. That is fine because we don’t want to keep writing code strings to pass in with our arguments every time we want to use a method.</p>
+
+
+
 
 <h2>What&rsquo;s going on with Map?</h2>
 
+
+
+
 <p>Let’s take a look at how <em>map</em> works. This is our generic <em>map</em> method that relies on <em>yield</em>, instead of the explicitly calling on <em>map</em>.</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1010,7 +1521,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>The difference here, from our generic <em>each</em> method, is that we’re creating a new array at the start of our method. Then, we shovel the results of our yielded block into the new array instead of just executing those blocks. At the end of the method, we return the new_array instead of the original array. So for the following argument and block this is what we’ll get:</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1019,7 +1535,12 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>That’s exactly what we get when we hard code our block into a map/collect method</p>
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1036,23 +1557,124 @@ When we call this method with a grid size of four and three monsters, we get the
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
 <p>Sweet!</p>
+
+
+
 
 <h3>TL;DR</h3>
 
+
+
+
 <p><em>Map</em> and <em>collect</em> are identical methods. If you want to perform some action on variables, call other methods depending on our array elements, etc., use <em>each</em>. If you want to return a new array based on some manipulation of your array, use <em>map</em>.</p>
 
+
+
+
 <p>Happy coding!</p>
-]]></content>
-  </entry>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[My First Post on Octopress]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/03/14/my-first-post-on-octopress/"/>
-    <updated>2017-03-14T19:02:43-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/03/14/my-first-post-on-octopress</id>
-    <content type="html"><![CDATA[<p>&ldquo;Hello, World.&rdquo;</p>
-]]></content>
-  </entry>
+
+
+
+<time datetime="2017-03-21T16:21:57-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
   
-</feed>
+    <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+      
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <article>
+  <h2><a href="/blog/2017/03/14/my-first-post-on-octopress/">My First Post on Octopress</a></h2>
+  
+  <p>
+    <p>&ldquo;Hello, World.&rdquo;</p>
+
+
+  </p>
+  <span class="meta">
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2017-03-14T19:02:43-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/school/'>school</a>
+  
+</span>
+
+
+  </span>
+
+  
+</article>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+  <span>
+  Powered by <a href="http://octopress.org/">Octopress</a>. Design based on the lovely <a href="https://github.com/sevenadrian/MediumFox">MediumFox</a>.
+</span>
+
+</div>
+
+    </div>
+  </div>
+</footer>
+
+    
+
+
+  </body>
+</html>

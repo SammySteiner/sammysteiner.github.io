@@ -18,151 +18,220 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sammysteiner.github.io/blog/categories/driven/">
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/categories/driven">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
   
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Creative Coding</a></h1>
-  
-    <h2>A Creative Writer's Guide to Code</h2>
-  
-</hgroup>
+  <body>
+    <div class="all-posts">
+  <div class="container">
+    <div class="row">
+      <div class="list-title col-md-offset-2 col-md-8">
+        <h4>Posts in driven</h4>
+      </div>
+    </div>
+  </div>
 
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  <div class="article-list">
+    <div class="container">
+      
+        
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <article>
+  <h2><a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a></h2>
   
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="sammysteiner.github.io">
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+  <p>
+    <h2>Getting started</h2>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article role="article">
-  
-  <header>
-    <h1 class="entry-title">Category: Driven</h1>
+<p>Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project directory, create a github repository, and then link the two. Here are the basic steps:</p>
+
+<ol>
+<li>Navigate to your development folder in Terminal.</li>
+<li>Type <code>mkdir "project-name"</code> in terminal to create a project folder.</li>
+<li>Type <code>cd "project-name"</code> in Terminal to navigate into your project directory.</li>
+<li>Type <code>git init</code> in Terminal to set up your directory as a git repository.</li>
+<li>Create a readme file by typing <code>touch README.md</code> in Terminal.</li>
+<li>Add and commit your new repository by typing <code>git add .</code> and  <code>git commit -m "first commit"</code>.</li>
+<li>To create a github repository, login to <a href="https://github.com">github</a> in your browser and navigate to <a href="https://github.com/new">github/new</a> to create a new repository.</li>
+<li>Once there, give your repository a name, use the same one as your project directory, and leave the &ldquo;Initialize this repository with a README&rdquo; option unchecked.</li>
+<li>Click &ldquo;Create Repository&rdquo;.</li>
+<li>Back in Terminal, type <code>git remote add origin git@github.com:your-git-username/your-repository-name.git</code> to set up the connection between the folder on your computer, and the repository in github.</li>
+<li>Then type <code>git push -u origin master</code> to push the files, ie. your readme, from your project folder to github.</li>
+</ol>
+
+
+<p>Now that your project is up and running, it&rsquo;s time to create a testing environment.</p>
+
+<h2>Jasmine versus Mocha</h2>
+
+<p>There are two very popular testing libraries for Javascript, Jasmine and Mocha. Both are great, and weighing the pros and cons of each is enough for another blog post. Some people have already written great articles on the topic here:</p>
+
+<ol>
+<li><a href="http://www.techtalkdc.com/which-javascript-test-library-should-you-use-qunit-vs-jasmine-vs-mocha/">Kevin Groat</a></li>
+<li><a href="https://marcofranssen.nl/jasmine-vs-mocha/">Marco Franssen</a></li>
+</ol>
+
+
+<p>I&rsquo;m more familiar with Mocha, so we&rsquo;re going to go with that.</p>
+
+<h2>Setting up Mocha</h2>
+
+<p>First we need to create our NPM dependencies, with a package.json file. There is a great walkthrough built in for us by typing <code>npm init</code> in Terminal. Just follow the promts and include a name, repo, and some other metadata in the form. That will create a package.json file in your project folder. Don&rsquo;t forget to add/commit your changes frequently.</p>
+
+<p>Create a mocha dependency in your project package.json file by typing <code>npm install --save mocha</code> in Terminal. Create a test file with <code>atom test/test.js</code>. I&rsquo;m using Atom, but you can replace that with your editor of choice.</p>
+
+<p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
+
+<p>In test.js:
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">var</span> <span class="n">expect</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">expect</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span>
+</span><span class='line'><span class="n">var</span> <span class="n">myCode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;describe (&amp;lsquo;test&amp;rsquo;, function() {</span>
+</span><span class='line'><span class="sr">  it(&amp;lsquo;returns &amp;ldquo;Hello, world!&amp;rdquo; as a string&amp;rsquo;, function() {</span>
+</span><span class='line'><span class="sr">    expect(myCode.test()).to.be(&amp;ldquo;Hello, world!&amp;rdquo;)</span>
+</span><span class='line'><span class="sr">  })</span>
+</span><span class='line'><span class="sr">})&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="no">All</span> <span class="n">other</span> <span class="n">tests</span> <span class="n">below</span><span class="o">&lt;</span><span class="sr">/h2&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>
+</span><span class='line'><span class="sr">In terminal: `npm install --save expect.js`</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">Now we&#39;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">to pass our first test, add the following code to index.js:</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;var test = function() {</span>
+</span><span class='line'><span class="sr">  return &amp;ldquo;Hello, world!&amp;rdquo;</span>
+</span><span class='line'><span class="sr">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
+
+<pre><code class="ruby">if(typeof exports !== 'undefined') {
+    exports.test = test
+}
+</code></pre>
+
+<p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
+
+<h2>Bonus</h2>
+
+<p>You don&rsquo;t need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called <code>testTwo</code> that should accept two arguments, multiply them, and return the result, you can export it in your exports like <code>exports.testTwo = testTwo</code>. However, if that function just returns a helper function, called <code>multiplier(num1, num2)</code>, you would not need to export that function as well.</p>
+
+<p>Here&rsquo;s what this test looks like in test.js:
+<code>ruby
+describe ('test2', function() {
+  it('multiplies two numbers together', function() {
+    expect(myCode.testTwo(3, 5)).to.be(15)
+  })
+})
+</code></p>
+
+<p>And here is how you would pass it in index.js. Note that you do not need to export <code>multiplier</code>.</p>
+
+<pre><code class="ruby">var testTwo = function(num1, num2) {
+  return mulitplier(num1, num2)
+}
+
+var mulitplier = function(a, b) {
+  return a * b
+}
+
+if(typeof exports !== 'undefined') {
+    exports.test = test;
+    exports.testTwo = testTwo
+}
+</code></pre>
+
+<p>Special thanks to <a href="https://github.com/jjseymour">JJ</a> for guiding me through this process!</p>
+
+  </p>
+  <span class="meta">
     
-  </header>
+
+
+
+
+
+
+
+
   
-  <div id="blog-archives" class="category">
 
 
+
+<time datetime="2017-04-30T20:32:44-04:00" pubdate data-updated="true"></time>
+    
+
+in
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/development/'>development</a>, <a class='category' href='/blog/categories/driven/'>driven</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/jasmine/'>jasmine</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/mocha/'>mocha</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test/'>test</a>
+  
+</span>
+
+
+  </span>
 
   
-  <h2>2017</h2>
-
-<article>
-  
-<h1><a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a></h1>
-<time datetime="2017-04-30T20:32:44-04:00" pubdate><span class='month'>Apr</span> <span class='day'>30</span> <span class='year'>2017</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/development/'>development</a>, <a class='category' href='/blog/categories/driven/'>driven</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/jasmine/'>jasmine</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/mocha/'>mocha</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test/'>test</a></span>
-</footer>
-
-
 </article>
 
+          </div>
+        </div>
+      
+    </div>
+  </div>
 </div>
 
-  
-</article>
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+  <span>
+  Powered by <a href="http://octopress.org/">Octopress</a>. Design based on the lovely <a href="https://github.com/sevenadrian/MediumFox">MediumFox</a>.
+</span>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
-  
-</aside>
-
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - Sammy Steiner -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
 </footer>
-  
+
+    
 
 
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>

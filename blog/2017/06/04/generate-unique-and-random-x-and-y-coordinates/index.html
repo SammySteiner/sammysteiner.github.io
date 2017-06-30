@@ -9,7 +9,7 @@
   <meta name="author" content="Sammy Steiner">
 
   
-  <meta name="description" content="Why would I need some random coordinates? I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it &hellip;">
+  <meta name="description" content="LM Building a Game: Generate Unique and Random X and Y Coordinates written in algorithm, flatiron, rails, ruby, school Why would I need some random &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,73 +18,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
   
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Creative Coding</a></h1>
+  <body>
+    <a href="/" class="home-icon grow">
+  <p>LM</p>
+</a>
+
+<article role="article" class="full-single-article">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>Building a Game: Generate Unique and Random X and Y Coordinates</h1>
+        <div class="meta">
+          written 
+
+
+
+
+
+
+
+
   
-    <h2>A Creative Writer's Guide to Code</h2>
+
+
+
+<time datetime="2017-06-04T12:39:18-04:00" pubdate data-updated="true"></time>
+          
+
+in
+<span class="categories">
   
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
   
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="sammysteiner.github.io">
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Building a Game: Generate Unique and Random X and Y Coordinates</h1>
-    
-    
-      <p class="meta">
-        
+</span>
 
 
-
-
-<time class='entry-date' datetime='2017-06-04T12:39:18-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:39 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><h2>Why would I need some random coordinates?</h2>
+        </div>
+        <h2>Why would I need some random coordinates?</h2>
 
 <p>I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it will be randomly populated with a door, a key, a bunch of monsters and the player&rsquo;s starting position. My database schema is expecting an &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for each of these, but to make my game work, I need to make sure that none of these start off on the same square. It wouldn&rsquo;t be very challenging if the key and door could appear on the same spot. It wouldn&rsquo;t be fun if the player spawned on the same tile as a monster and lost the game immediately! There are lots of reasons you might want to generate a number of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size, this would work for all of them.</p>
 
@@ -265,119 +247,46 @@ When we call this method with a grid size of four and three monsters, we get the
 <p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
 
 <p>Good luck and happy coding!</p>
-</div>
 
-
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">Sammy Steiner</span></span>
-
-      
-
-
-
-
-<time class='entry-date' datetime='2017-06-04T12:39:18-04:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>12:39 pm</span></time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/" >Tweet</a>
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/" title="Previous Post: React Containers and Components: classes vs functions">&laquo; React Containers and Components: classes vs functions</a>
-      
-      
-    </p>
-  </footer>
+      </div>
+    </div>
+  </div>
 </article>
 
+<hr class="divider-short"/>
+
+<div class="archive-link">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+          <a class="pull-left" href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/" title="Previous Post: React Containers and Components: classes vs functions">&laquo; Previous: React Containers and Components: classes vs functions</a>
+        
+
+        
+      </div>
+    </div>
+  </div>
 </div>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a>
-      </li>
-    
-  </ul>
-</section>
 
 
+    <footer id="footer" class="her-row">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+  <span>
+  Powered by <a href="http://octopress.org/">Octopress</a>. Design based on the lovely <a href="https://github.com/sevenadrian/MediumFox">MediumFox</a>.
+</span>
 
-
-
-  
-</aside>
-
+</div>
 
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - Sammy Steiner -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
 </footer>
-  
+
+    
 
 
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
+  </body>
 </html>
