@@ -3,10 +3,6 @@
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Category: Array - Creative Coding</title>
@@ -28,213 +24,132 @@
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 </head>
 
-  <body>
-    <a href="/" class="home-icon">
-      <img src="/images/home.png"/>
-    </a>
-
-    <div class="all-posts">
-  <div class="container">
-    <div class="row">
-      <div class="list-title col-md-offset-3 col-md-6">
-        <h4>Posts in array</h4>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-list">
-    <div class="container">
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h2>
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
   
-  <p>
-    <h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
-
-<p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
-
-<p>FYI for the rest of the post, I&rsquo;m going to use &ldquo;<em>map</em>&rdquo; instead of <em>map</em> and <em>collect</em> because <em>map</em> and <em>collect</em> are identical. That is, they do the exact same thing. The only difference is that &ldquo;map&rdquo; is 3 characters to type but &ldquo;collect&rdquo; is more descriptive as to what’s going. You can think of it like we&rsquo;re collecting our new array elements and returning that collection as an array.</p>
-
-<p>If you&rsquo;re trying to do all that with <em>each</em> but adding on some <em>if</em> statements to determine what you&rsquo;re shoveling, you should look at some other methods like <em>find</em>, <em>select</em>, and many others!</p>
-
-<h2>Yield is awesome!</h2>
-
-<p>First, lets talk about what these iterator methods are doing. In order to dig into that, we need to discuss the <em>yield</em> keyword. <em>Yield</em> is a way to pass a block of code into an method with the arguments. For example, to demonstrate how <em>yield</em> interrupts a method to call on a separate block:</p>
-
-<pre><code class="ruby">def interrupt_this_method(number)
-    puts "thing one"
-    puts yield(number)
-    puts "thing two"
-end
-
-interrupt_this_method(3) {|i| i * 2}
-
-#=&gt;
-‘thing one’
-6
-‘thing two’
-</code></pre>
-
-<p>The <em>yield</em> stops the method from putting the second statement until it has a chance to call whatever argument we passed into the method with the arguments in the block on the argument we pass into <em>yield</em>. We can use <em>yield</em> with a looping method like <em>while</em> to emulate our <em>each</em> and <em>map</em> methods to get under the hood.</p>
-
-<h2>What is going on with Each?</h2>
-
-<p>Now we’ll write our own <em>each</em> method, without using “<em>each</em>.” Aside from giving us some insight into what’s actually happening with our <em>each</em> method, it will show us how much time our higher level methods are saving us.</p>
-
-<pre><code class="ruby">def generic_each_array_method_with_iterator(array)
-  i = 0
-  while i &lt; array.length
-    yield array[i]
-        i = i + 1
-  end
-  array
-end
-</code></pre>
-
-<p>So far, we have a generic method that takes an array as an argument, as well as a block of code, sets the variable i to 0 and operates our code on each element of our array, adding 1 to the i variable, between each iteration, and stopping the <em>yield</em> when we’ve hit all the elements. We then return the original array that was passed in. We can use this to pass any block into our method with any array. Let’s give it a try:</p>
-
-<pre><code class="ruby">generic_each_array_method_with_iterator([1, 2, 3, 4, 5]) {|num| puts num * 2}
-#=&gt;
-2
-4
-6
-8
-10
-[1,2,3,4,5]
-</code></pre>
-
-<p>That’s exactly what we get when we hard code the block into our method using <em>each</em>.</p>
-
-<pre><code class="ruby">def times_two(array)
-  array.each {|num| puts num * 2}
-end
-
-times_two([1, 2, 3, 4, 5])
-#=&gt;
-2
-4
-6
-8
-10
-[1,2,3,4,5]
-</code></pre>
-
-<p>Pretty cool, right! The <em>each</em> method allows us to user the elements in our array, and return the original array. As you can see, the <em>each</em> method is really easy to write, but a lot less flexible than the <em>yield</em> method. That is fine because we don’t want to keep writing code strings to pass in with our arguments every time we want to use a method.</p>
-
-<h2>What&rsquo;s going on with Map?</h2>
-
-<p>Let’s take a look at how <em>map</em> works. This is our generic <em>map</em> method that relies on <em>yield</em>, instead of the explicitly calling on <em>map</em>.</p>
-
-<pre><code class="ruby">def generic_map_array_method_with_iterator(array)
-  new_array = []
-  i = 0
-  while i &lt; array.length
-    new_array &lt;&lt; yield(array[i])
-        i = i + 1
-  end
-  new_array
-end
-</code></pre>
-
-<p>The difference here, from our generic <em>each</em> method, is that we’re creating a new array at the start of our method. Then, we shovel the results of our yielded block into the new array instead of just executing those blocks. At the end of the method, we return the new_array instead of the original array. So for the following argument and block this is what we’ll get:</p>
-
-<pre><code class="ruby">generic_map_array_method_with_iterator([1,2,3,4,5]) {|num| num * 2}
-#=&gt;  [2, 4, 6, 8, 10]
-</code></pre>
-
-<p>That’s exactly what we get when we hard code our block into a map/collect method</p>
-
-<pre><code class="ruby">def multiply_array_elements_by_two(array)
-  array.map {|num| num * 2}
-end
-
-multiply_array_elements_by_two([1,2,3,4,5])
-#=&gt; [2, 4, 6, 8, 10]
-</code></pre>
-
-<p>Sweet!</p>
-
-<h3>TL;DR</h3>
-
-<p><em>Map</em> and <em>collect</em> are identical methods. If you want to perform some action on variables, call other methods depending on our array elements, etc., use <em>each</em>. If you want to return a new array based on some manipulation of your array, use <em>map</em>.</p>
-
-<p>Happy coding!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
+    <h2>A Creative Writer's Guide to Code</h2>
   
+</hgroup>
 
-
-
-<time datetime="2017-03-21T16:21:57-04:00" pubdate data-updated="true"></time>
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     
-
-in
-<span class="categories">
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
   
-    <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
   
-</span>
+  <header>
+    <h1 class="entry-title">Category: Array</h1>
+    
+  </header>
+  
+  <div id="blog-archives" class="category">
 
 
-  </span>
+
+  
+  <h2>2017</h2>
+
+<article>
+  
+<h1><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h1>
+<time datetime="2017-03-21T16:21:57-04:00" pubdate><span class='month'>Mar</span> <span class='day'>21</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
+</footer>
+
+
+</article>
+
+</div>
 
   
 </article>
 
-          </div>
-        </div>
-      
-    </div>
-  </div>
+
 </div>
 
-    <footer id="footer" class="her-row">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-1">
-  <a href="/"><h4>Home</h4></a>
-</div>
-
-<div class="col-md-2">
-  <div class="social-icon-list">
+<aside class="sidebar">
+  
     
-
-    
-
-    
-
-    
-  </div>
-</div>
-
-<div class="pull-right">
-  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
-</div>
+  
+</aside>
 
 
     </div>
   </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
 </footer>
+  
 
-    
-  </body>
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
 </html>

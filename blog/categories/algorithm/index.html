@@ -3,10 +3,6 @@
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Category: Algorithm - Creative Coding</title>
@@ -28,247 +24,132 @@
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 </head>
 
-  <body>
-    <a href="/" class="home-icon">
-      <img src="/images/home.png"/>
-    </a>
-
-    <div class="all-posts">
-  <div class="container">
-    <div class="row">
-      <div class="list-title col-md-offset-3 col-md-6">
-        <h4>Posts in algorithm</h4>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-list">
-    <div class="container">
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a></h2>
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
   
-  <p>
-    <h2>Why would I need some random coordinates?</h2>
-
-<p>I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it will be randomly populated with a door, a key, a bunch of monsters and the player&rsquo;s starting position. My database schema is expecting an &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for each of these, but to make my game work, I need to make sure that none of these start off on the same square. It wouldn&rsquo;t be very challenging if the key and door could appear on the same spot. It wouldn&rsquo;t be fun if the player spawned on the same tile as a monster and lost the game immediately! There are lots of reasons you might want to generate a number of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size, this would work for all of them.</p>
-
-<h2>What do I want my result to look like?</h2>
-
-<p>We&rsquo;re going to start simple and build out more complexity as we get things working. As I said, I need a coordinate for the door, a key, the player and some monsters, that&rsquo;s a minimum of four coordinates and we need a board that is two squares by two squares to fit everything. In this case, I&rsquo;m using all the possible coordinates, so I want my final outcome to look something like this hash of info:
-<code>
-game_coordinates = {
-  player: {x: 1, y: 1},
-  door: {x:1, y:2},
-  key: {x:2, y:1},
-  monster: [
-  {x: 2, y: 2}
-  ]
-}
-</code></p>
-
-<p>Let&rsquo;s zoom in on the first problem we want to solve. Getting ourselves the list of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. This sounds like we want to use an array, which we would ultimately need to iterate over to assign values. For now, our array should look like this:
-<code>
-unique_coordinates = [[1,1], [1,2], [2,1], [2,2]]
-</code></p>
-
-<p>We will use this array later to assign the coordinates to the door, key, player, and monster. Let&rsquo;s break down what we are seeing. This isn&rsquo;t one simple array, it&rsquo;s an array of arrays. Each of the nested arrays represents a unique set of &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. We can also have two arrays for the x and the y values:
-<code>
-x_values = [1, 1, 2, 2]
-y_values = [1, 1, 2, 2]
-</code></p>
-
-<p>If we look a little closer, the arrays shouldn&rsquo;t both be in order like that. In our unique_coordinates array, they &lsquo;x&rsquo; values repeat then increment while the &lsquo;y&rsquo; values increment then repeat. So we want values that look like this:
-<code>
-x_values = [1, 1, 2, 2]
-y_values = [1, 2, 1, 2]
-</code></p>
-
-<h2>Let&rsquo;s hard code this to get started</h2>
-
-<p>Now that we have the basic building blocks for our data structure, let&rsquo;s put it together assuming we have the unique values we need. In our two by two grid, with the x_values and y_values arrays, all we need to do is a simple loop to get our unique_coordinates array, and pull off four coordinates at random:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="n">unique_coordinates_generator</span> <span class="o">=</span>
-</span><span class='line'><span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
-</span><span class='line'><span class="k">end</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;h1&gt;&gt;&gt;&gt; [[1,1], [1,2], [2,1], [2,2]]&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>
-</span><span class='line'><span class="no">Perfect</span><span class="o">!</span> <span class="no">Just</span> <span class="n">note</span> <span class="n">that</span> <span class="k">if</span> <span class="n">you</span><span class="s1">&#39;re following along, your coordinates may be in a different order, that&#39;</span><span class="n">s</span> <span class="n">exactly</span> <span class="n">what</span> <span class="n">we</span> <span class="n">want</span><span class="o">.</span> <span class="no">They</span> <span class="n">should</span> <span class="n">all</span> <span class="n">be</span> <span class="n">unique</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">To</span> <span class="n">assign</span> <span class="n">each</span> <span class="n">of</span> <span class="n">these</span> <span class="n">to</span> <span class="n">our</span> <span class="n">game</span> <span class="n">board</span> <span class="n">objects</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="k">do</span> <span class="n">this</span> <span class="n">by</span> <span class="n">assigning</span> <span class="n">each</span> <span class="n">a</span> <span class="n">value</span> <span class="n">from</span> <span class="n">the</span> <span class="n">unique_coordinates_generator</span><span class="o">.</span> <span class="no">This</span> <span class="n">isn</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">the</span> <span class="n">prettiest</span> <span class="n">way</span> <span class="n">to</span> <span class="k">do</span> <span class="n">this</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">will</span> <span class="n">work</span><span class="o">.</span>
-</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">player</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'><span class="n">door</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
-</span><span class='line'><span class="n">key</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
-</span><span class='line'><span class="n">monsters</span> <span class="o">=</span> <span class="o">[</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>this looks great. The next step is to abstract this to handle grids of any size, with more than four coordinates to accommodate multiple monsters.</p>
-
-<h2>Abstraction</h2>
-
-<p>To state our problem here more simply, we want to create our x_values and y_values arrays for grids larger than two by two. That means, the size of the grid would need to be an argument. Additionally we can infer from the fact that we need to accommodate a variable number of monsters that the number of monsters will also be an argument. So the skeleton of our code should look something like this:
-<code>Ruby
-def coord_generator(grid_size, number_of_monsters)
-  # some code that creates:
-  # x values from 1 to the grid size, where we get a 1 the grid_size number of times, followed by a 2 the grid_size number of times, etc.
-  # y values that count from 1 to the grid_size number for the grid_size number of times.
-  # then we map over the arrays like we did before.
-  # finally we sample the array with the number of monsters plus the door, key, and player.
-end
-</code></p>
-
-<p>Now that we&rsquo;ve stubbed that out in sudo code. It is really easy to translate that to code using some simple ruby operators:</p>
-
-<pre><code class="Ruby">def coord_generator(grid_size, number_of_monsters)
-    x_values = ((1..grid_size).to_a * grid_size).sort()
-    y_values = ((1..grid_size).to_a * grid_size)
-    unique_coordinates = x_values.each_with_index.map do |x, index|
-      [x, y_values[index]]
-    end
-    unique_coordinates.sample(number_of_monsters + 3)
-  end
-</code></pre>
-
-<h2>Conclusion</h2>
-
-<p>We&rsquo;ve almost finished, but we still have one thing left to do, we need to output our game_coordinates object. To do that, we need to assign the values like we demonstrated above, but we also need to account for having several monsters.</p>
-
-<pre><code class="Ruby">def game_coordinates(grid_size, number_of_monsters)
-  unique_coordinates = coord_generator(grid_size, number_of_monsters)
-  player = unique_coordinates[0]
-  door = unique_coordinates[1]
-  key = unique_coordinates[2]
-  monsters = []
-  number_of_monsters.times do |i|
-     monsters &lt;&lt; unique_coordinates[ 3 + i]
-  end
-  game_coords = {player: {x: player[0], y: player[1]}, door: {x: door[0], y: door[1]}, key: {x: key[0], y: key[1]}, monsters: monsters.map do |monster|
-    [x: monster[0], y: monster[1]]
-  end}
-end
-</code></pre>
-
-<p>When we call this method with a grid size of two and one monster, we get the results:</p>
-
-<pre><code class="`"> {
-   :player=&gt;{:x=&gt;2, :y=&gt;1},
-   :door=&gt;{:x=&gt;1, :y=&gt;1},
-   :key=&gt;{:x=&gt;2, :y=&gt;2},
-   :monsters=&gt;[[{:x=&gt;1, :y=&gt;2}]]
-   }```
-
-When we call this method with a grid size of four and three monsters, we get the results:
-</code></pre>
-
-<p> {
-   :player=>{:x=>2, :y=>1},
-   :door=>{:x=>4, :y=>3},
-   :key=>{:x=>4, :y=>2},
-   :monsters=>[
-    [{:x=>1, :y=>3}], [{:x=>3, :y=>4}], [{:x=>4, :y=>1}]]
-  }
-  ```</p>
-
-<p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
-
-<p>Good luck and happy coding!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
+    <h2>A Creative Writer's Guide to Code</h2>
   
+</hgroup>
 
-
-
-<time datetime="2017-06-04T12:39:18-04:00" pubdate data-updated="true"></time>
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     
-
-in
-<span class="categories">
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
   
-    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
   
-</span>
+  <header>
+    <h1 class="entry-title">Category: Algorithm</h1>
+    
+  </header>
+  
+  <div id="blog-archives" class="category">
 
 
-  </span>
+
+  
+  <h2>2017</h2>
+
+<article>
+  
+<h1><a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a></h1>
+<time datetime="2017-06-04T12:39:18-04:00" pubdate><span class='month'>Jun</span> <span class='day'>04</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
+</footer>
+
+
+</article>
+
+</div>
 
   
 </article>
 
-          </div>
-        </div>
-      
-    </div>
-  </div>
+
 </div>
 
-    <footer id="footer" class="her-row">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-1">
-  <a href="/"><h4>Home</h4></a>
-</div>
-
-<div class="col-md-2">
-  <div class="social-icon-list">
+<aside class="sidebar">
+  
     
-
-    
-
-    
-
-    
-  </div>
-</div>
-
-<div class="pull-right">
-  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
-</div>
+  
+</aside>
 
 
     </div>
   </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
 </footer>
+  
 
-    
-  </body>
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
 </html>

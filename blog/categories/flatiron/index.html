@@ -3,10 +3,6 @@
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Category: Flatiron - Creative Coding</title>
@@ -28,730 +24,188 @@
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 </head>
 
-  <body>
-    <a href="/" class="home-icon">
-      <img src="/images/home.png"/>
-    </a>
-
-    <div class="all-posts">
-  <div class="container">
-    <div class="row">
-      <div class="list-title col-md-offset-3 col-md-6">
-        <h4>Posts in flatiron</h4>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-list">
-    <div class="container">
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a></h2>
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
   
-  <p>
-    <h2>Why would I need some random coordinates?</h2>
-
-<p>I want to build a game. This game is going to have a dungeon, represented by tiles on a game board, and it will be randomly populated with a door, a key, a bunch of monsters and the player&rsquo;s starting position. My database schema is expecting an &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for each of these, but to make my game work, I need to make sure that none of these start off on the same square. It wouldn&rsquo;t be very challenging if the key and door could appear on the same spot. It wouldn&rsquo;t be fun if the player spawned on the same tile as a monster and lost the game immediately! There are lots of reasons you might want to generate a number of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size, this would work for all of them.</p>
-
-<h2>What do I want my result to look like?</h2>
-
-<p>We&rsquo;re going to start simple and build out more complexity as we get things working. As I said, I need a coordinate for the door, a key, the player and some monsters, that&rsquo;s a minimum of four coordinates and we need a board that is two squares by two squares to fit everything. In this case, I&rsquo;m using all the possible coordinates, so I want my final outcome to look something like this hash of info:
-<code>
-game_coordinates = {
-  player: {x: 1, y: 1},
-  door: {x:1, y:2},
-  key: {x:2, y:1},
-  monster: [
-  {x: 2, y: 2}
-  ]
-}
-</code></p>
-
-<p>Let&rsquo;s zoom in on the first problem we want to solve. Getting ourselves the list of unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. This sounds like we want to use an array, which we would ultimately need to iterate over to assign values. For now, our array should look like this:
-<code>
-unique_coordinates = [[1,1], [1,2], [2,1], [2,2]]
-</code></p>
-
-<p>We will use this array later to assign the coordinates to the door, key, player, and monster. Let&rsquo;s break down what we are seeing. This isn&rsquo;t one simple array, it&rsquo;s an array of arrays. Each of the nested arrays represents a unique set of &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates. We can also have two arrays for the x and the y values:
-<code>
-x_values = [1, 1, 2, 2]
-y_values = [1, 1, 2, 2]
-</code></p>
-
-<p>If we look a little closer, the arrays shouldn&rsquo;t both be in order like that. In our unique_coordinates array, they &lsquo;x&rsquo; values repeat then increment while the &lsquo;y&rsquo; values increment then repeat. So we want values that look like this:
-<code>
-x_values = [1, 1, 2, 2]
-y_values = [1, 2, 1, 2]
-</code></p>
-
-<h2>Let&rsquo;s hard code this to get started</h2>
-
-<p>Now that we have the basic building blocks for our data structure, let&rsquo;s put it together assuming we have the unique values we need. In our two by two grid, with the x_values and y_values arrays, all we need to do is a simple loop to get our unique_coordinates array, and pull off four coordinates at random:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="n">unique_coordinates_generator</span> <span class="o">=</span>
-</span><span class='line'><span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
-</span><span class='line'><span class="k">end</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;h1&gt;&gt;&gt;&gt; [[1,1], [1,2], [2,1], [2,2]]&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>
-</span><span class='line'><span class="no">Perfect</span><span class="o">!</span> <span class="no">Just</span> <span class="n">note</span> <span class="n">that</span> <span class="k">if</span> <span class="n">you</span><span class="s1">&#39;re following along, your coordinates may be in a different order, that&#39;</span><span class="n">s</span> <span class="n">exactly</span> <span class="n">what</span> <span class="n">we</span> <span class="n">want</span><span class="o">.</span> <span class="no">They</span> <span class="n">should</span> <span class="n">all</span> <span class="n">be</span> <span class="n">unique</span><span class="o">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="no">To</span> <span class="n">assign</span> <span class="n">each</span> <span class="n">of</span> <span class="n">these</span> <span class="n">to</span> <span class="n">our</span> <span class="n">game</span> <span class="n">board</span> <span class="n">objects</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="k">do</span> <span class="n">this</span> <span class="n">by</span> <span class="n">assigning</span> <span class="n">each</span> <span class="n">a</span> <span class="n">value</span> <span class="n">from</span> <span class="n">the</span> <span class="n">unique_coordinates_generator</span><span class="o">.</span> <span class="no">This</span> <span class="n">isn</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">the</span> <span class="n">prettiest</span> <span class="n">way</span> <span class="n">to</span> <span class="k">do</span> <span class="n">this</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">will</span> <span class="n">work</span><span class="o">.</span>
-</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">player</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-</span><span class='line'><span class="n">door</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
-</span><span class='line'><span class="n">key</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
-</span><span class='line'><span class="n">monsters</span> <span class="o">=</span> <span class="o">[</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>this looks great. The next step is to abstract this to handle grids of any size, with more than four coordinates to accommodate multiple monsters.</p>
-
-<h2>Abstraction</h2>
-
-<p>To state our problem here more simply, we want to create our x_values and y_values arrays for grids larger than two by two. That means, the size of the grid would need to be an argument. Additionally we can infer from the fact that we need to accommodate a variable number of monsters that the number of monsters will also be an argument. So the skeleton of our code should look something like this:
-<code>Ruby
-def coord_generator(grid_size, number_of_monsters)
-  # some code that creates:
-  # x values from 1 to the grid size, where we get a 1 the grid_size number of times, followed by a 2 the grid_size number of times, etc.
-  # y values that count from 1 to the grid_size number for the grid_size number of times.
-  # then we map over the arrays like we did before.
-  # finally we sample the array with the number of monsters plus the door, key, and player.
-end
-</code></p>
-
-<p>Now that we&rsquo;ve stubbed that out in sudo code. It is really easy to translate that to code using some simple ruby operators:</p>
-
-<pre><code class="Ruby">def coord_generator(grid_size, number_of_monsters)
-    x_values = ((1..grid_size).to_a * grid_size).sort()
-    y_values = ((1..grid_size).to_a * grid_size)
-    unique_coordinates = x_values.each_with_index.map do |x, index|
-      [x, y_values[index]]
-    end
-    unique_coordinates.sample(number_of_monsters + 3)
-  end
-</code></pre>
-
-<h2>Conclusion</h2>
-
-<p>We&rsquo;ve almost finished, but we still have one thing left to do, we need to output our game_coordinates object. To do that, we need to assign the values like we demonstrated above, but we also need to account for having several monsters.</p>
-
-<pre><code class="Ruby">def game_coordinates(grid_size, number_of_monsters)
-  unique_coordinates = coord_generator(grid_size, number_of_monsters)
-  player = unique_coordinates[0]
-  door = unique_coordinates[1]
-  key = unique_coordinates[2]
-  monsters = []
-  number_of_monsters.times do |i|
-     monsters &lt;&lt; unique_coordinates[ 3 + i]
-  end
-  game_coords = {player: {x: player[0], y: player[1]}, door: {x: door[0], y: door[1]}, key: {x: key[0], y: key[1]}, monsters: monsters.map do |monster|
-    [x: monster[0], y: monster[1]]
-  end}
-end
-</code></pre>
-
-<p>When we call this method with a grid size of two and one monster, we get the results:</p>
-
-<pre><code class="`"> {
-   :player=&gt;{:x=&gt;2, :y=&gt;1},
-   :door=&gt;{:x=&gt;1, :y=&gt;1},
-   :key=&gt;{:x=&gt;2, :y=&gt;2},
-   :monsters=&gt;[[{:x=&gt;1, :y=&gt;2}]]
-   }```
-
-When we call this method with a grid size of four and three monsters, we get the results:
-</code></pre>
-
-<p> {
-   :player=>{:x=>2, :y=>1},
-   :door=>{:x=>4, :y=>3},
-   :key=>{:x=>4, :y=>2},
-   :monsters=>[
-    [{:x=>1, :y=>3}], [{:x=>3, :y=>4}], [{:x=>4, :y=>1}]]
-  }
-  ```</p>
-
-<p>We&rsquo;ve done it! We started with a scary sounding requirement, &ldquo;generate a number of random and unique &lsquo;x&rsquo; and &lsquo;y&rsquo; coordinates for a grid of a given size.&rdquo; We brainstormed about how we wanted the data to look and we divided it into simpler and simpler parts. We broke that down into basic procedural tasks with a hard coded example. Then we abstracted away each of the hard coded parts with information from the requirements, until we produced a general and powerful piece of code.</p>
-
-<p>Good luck and happy coding!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
+    <h2>A Creative Writer's Guide to Code</h2>
   
+</hgroup>
 
-
-
-<time datetime="2017-06-04T12:39:18-04:00" pubdate data-updated="true"></time>
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     
-
-in
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
-  
-</span>
-
-
-  </span>
-
-  
-</article>
-
-          </div>
-        </div>
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a></h2>
-  
-  <p>
-    <h2>Getting started</h2>
-
-<p>Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project directory, create a github repository, and then link the two. Here are the basic steps:</p>
-
-<ol>
-<li>Navigate to your development folder in Terminal.</li>
-<li>Type <code>mkdir "project-name"</code> in terminal to create a project folder.</li>
-<li>Type <code>cd "project-name"</code> in Terminal to navigate into your project directory.</li>
-<li>Type <code>git init</code> in Terminal to set up your directory as a git repository.</li>
-<li>Create a readme file by typing <code>touch README.md</code> in Terminal.</li>
-<li>Add and commit your new repository by typing <code>git add .</code> and  <code>git commit -m "first commit"</code>.</li>
-<li>To create a github repository, login to <a href="https://github.com">github</a> in your browser and navigate to <a href="https://github.com/new">github/new</a> to create a new repository.</li>
-<li>Once there, give your repository a name, use the same one as your project directory, and leave the &ldquo;Initialize this repository with a README&rdquo; option unchecked.</li>
-<li>Click &ldquo;Create Repository&rdquo;.</li>
-<li>Back in Terminal, type <code>git remote add origin git@github.com:your-git-username/your-repository-name.git</code> to set up the connection between the folder on your computer, and the repository in github.</li>
-<li>Then type <code>git push -u origin master</code> to push the files, ie. your readme, from your project folder to github.</li>
-</ol>
-
-
-<p>Now that your project is up and running, it&rsquo;s time to create a testing environment.</p>
-
-<h2>Jasmine versus Mocha</h2>
-
-<p>There are two very popular testing libraries for Javascript, Jasmine and Mocha. Both are great, and weighing the pros and cons of each is enough for another blog post. Some people have already written great articles on the topic here:</p>
-
-<ol>
-<li><a href="http://www.techtalkdc.com/which-javascript-test-library-should-you-use-qunit-vs-jasmine-vs-mocha/">Kevin Groat</a></li>
-<li><a href="https://marcofranssen.nl/jasmine-vs-mocha/">Marco Franssen</a></li>
-</ol>
-
-
-<p>I&rsquo;m more familiar with Mocha, so we&rsquo;re going to go with that.</p>
-
-<h2>Setting up Mocha</h2>
-
-<p>First we need to create our NPM dependencies, with a package.json file. There is a great walkthrough built in for us by typing <code>npm init</code> in Terminal. Just follow the promts and include a name, repo, and some other metadata in the form. That will create a package.json file in your project folder. Don&rsquo;t forget to add/commit your changes frequently.</p>
-
-<p>Create a mocha dependency in your project package.json file by typing <code>npm install --save mocha</code> in Terminal. Create a test file with <code>atom test/test.js</code>. I&rsquo;m using Atom, but you can replace that with your editor of choice.</p>
-
-<p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
-
-<p>In test.js:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">var</span> <span class="n">expect</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">expect</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="n">var</span> <span class="n">myCode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;describe (&amp;lsquo;test&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">  it(&amp;lsquo;returns &amp;ldquo;Hello, world!&amp;rdquo; as a string&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">    expect(myCode.test()).to.be(&amp;ldquo;Hello, world!&amp;rdquo;)</span>
-</span><span class='line'><span class="sr">  })</span>
-</span><span class='line'><span class="sr">})&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="no">All</span> <span class="n">other</span> <span class="n">tests</span> <span class="n">below</span><span class="o">&lt;</span><span class="sr">/h2&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>
-</span><span class='line'><span class="sr">In terminal: `npm install --save expect.js`</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">Now we&#39;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">to pass our first test, add the following code to index.js:</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;var test = function() {</span>
-</span><span class='line'><span class="sr">  return &amp;ldquo;Hello, world!&amp;rdquo;</span>
-</span><span class='line'><span class="sr">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
-
-<pre><code class="ruby">if(typeof exports !== 'undefined') {
-    exports.test = test
-}
-</code></pre>
-
-<p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
-
-<h2>Bonus</h2>
-
-<p>You don&rsquo;t need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called <code>testTwo</code> that should accept two arguments, multiply them, and return the result, you can export it in your exports like <code>exports.testTwo = testTwo</code>. However, if that function just returns a helper function, called <code>multiplier(num1, num2)</code>, you would not need to export that function as well.</p>
-
-<p>Here&rsquo;s what this test looks like in test.js:
-<code>ruby
-describe ('test2', function() {
-  it('multiplies two numbers together', function() {
-    expect(myCode.testTwo(3, 5)).to.be(15)
-  })
-})
-</code></p>
-
-<p>And here is how you would pass it in index.js. Note that you do not need to export <code>multiplier</code>.</p>
-
-<pre><code class="ruby">var testTwo = function(num1, num2) {
-  return mulitplier(num1, num2)
-}
-
-var mulitplier = function(a, b) {
-  return a * b
-}
-
-if(typeof exports !== 'undefined') {
-    exports.test = test;
-    exports.testTwo = testTwo
-}
-</code></pre>
-
-<p>Special thanks to <a href="https://github.com/jjseymour">JJ</a> for guiding me through this process!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2017-04-30T20:32:44-04:00" pubdate data-updated="true"></time>
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
     
-
-in
-<span class="categories">
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
   
-    <a class='category' href='/blog/categories/development/'>development</a>, <a class='category' href='/blog/categories/driven/'>driven</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/jasmine/'>jasmine</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/mocha/'>mocha</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test/'>test</a>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
   
-</span>
-
-
-  </span>
-
-  
-</article>
-
-          </div>
-        </div>
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a></h2>
-  
-  <p>
-    <h2>Animation in the Terminal?!</h2>
-
-<p>While working on a command line application, with <a href="https://github.com/szrharrison">Scott Harrison</a>, we decided to add some flair with an animation in the terminal. While looking for inspiration, and to see if it is even possible, we found this amazing, and very long example. Just type <code>telnet towel.blinkenlights.nl</code> into your terminal to connect with a telnet server that broadcasts Star Wars Episode IV!</p>
-
-<p>The project we were working on was pulling data from  <a href="https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn">NYC Open Data</a>, specifically from the database for free public wifi locations, and using a google maps gem for rails, called geocoder, to help find the closest free wifi access point. While looking for a suitable animation, we found this on <a href="https://giphy.com/gifs/jordan-hill-wifi-qzczxN15LFGY8/">gify</a>, and we knew we had to make it happen.</p>
-
-<p><img src="/assets/giphy.gif" alt="Wifi clip from GIPHY" /></p>
-
-<p>Aside for the fun of it, why would you want to run an animation in a terminal application? We found our application hit some delays when looking for the user&rsquo;s IP address and while hitting the google maps api. A neat animation works as a loading screen, while that happens in the background. That isn&rsquo;t what we did, but that would be a great project for refactoring.</p>
-
-<h2>The plan</h2>
-
-<p>Here&rsquo;s a checklist; we&rsquo;ll go into detail below:</p>
-
-<ol>
-<li>Find a clip</li>
-<li>Extract individual frames</li>
-<li>Convert each frame to ASCII</li>
-<li>Add the folder with your slides to your project</li>
-<li>Build an iterator method to loop through the frames</li>
-</ol>
-
-
-<h2>Building your files</h2>
-
-<p>First, you&rsquo;ll need a clip that you want to animate, it can be saved as a gif, or even in a video format. We downloaded ours from the link above and it is formatted as an mp4 file. Then, you&rsquo;ll need to extract the frames from your clip. There is a nifty terminal tool to do this, called <a href="https://ffmpeg.org/about.html">ffmpeg</a>, that you can read more about. You&rsquo;ll need to make some decisions about where to start stop and stop your extraction, and many frames you want per second. Our command looked something like this: <code>ffmpeg -i wifinder_animation.mov -r 5 image-%02d.jpeg</code>.</p>
-
-<p>After that it gets a bit tedious, you have to convert each image to ASCII art. Thankfully there are lots of free tools online that will do this for you. If we were dealing with a longer clip, we would have looked for a way to convert the entire folder in one go, but we just uploaded each frame to <a href="http://www.text-image.com/convert/ascii.html">this site</a>. Pro tip: name your files based on where you want your clip to start and stop, starting with something like &ldquo;1&rdquo; and counting up, so you can easily iterate through the images.</p>
-
-<p>Then just add the folder with your beautiful ASCII art frames to your repo and get ready to build an animation!</p>
-
-<h2>Building an animation</h2>
-
-<p>To get started, we&rsquo;re going to write an animation method that will loop through our images in the animation folder one time.</p>
-
-<pre><code class="Ruby">def animation
-  i = 1
-  while i &lt; 60
-    print "\033[2J"
-    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
-    sleep(0.03)
-    i += 1
-  end
-end
-</code></pre>
-
-<p>First create a variable and set it to 1, then we&rsquo;ll start our iteration. For a 60 frame animation, we&rsquo;ll run our loop while our variable is less than 60. Then we&rsquo;ll clear the window by moving the cursor to the top right of the terminal window with <code>print "\033[2J"</code>. Then we&rsquo;ll loop through our animation folder, named &ldquo;ascii_animation&rdquo; in this example, using our variable to indicate the file name, 1.rb, 2.rb, 3.rb, etc, printing each line of our image to the terminal. Then we&rsquo;ll let the image stay on screen for .03 seconds &lsquo;sleep(0.03)&rsquo;. Finally we&rsquo;ll increment our iterator and begin the loop again.</p>
-
-<p>If we want to run our animation multiple times, we can just put a loop method before our method call, like this: <code>3.times { animation }</code></p>
-
-<p>Finally, if you want to freeze frame your animation somewhere in the middle, instead of the potentially boring last frame in your file, you can start another loop, this time ending at your target frame.</p>
-
-<pre><code class="Ruby">def animation_with_a_great_final_frame
-  2.times do
-    i = 1
-    while i &lt; 60
-      print "\033[2J"
-      File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
-      sleep(0.03)
-      i += 1
-    end
-  end
-  i = 1
-  while i &lt; 30
-    print "\033[2J"
-    File.foreach("ascii_animation/#{i}.rb") { |f| puts f }
-    sleep(0.03)
-    i += 1
-  end
-end
-</code></pre>
-
-<p>That&rsquo;s it! Now you can enjoy our sweet CLI wifi animation.</p>
-
-<h2>Showtime!</h2>
-
-<p><img src="/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2017-04-13T17:46:02-04:00" pubdate data-updated="true"></time>
+  <header>
+    <h1 class="entry-title">Category: Flatiron</h1>
     
-
-in
-<span class="categories">
+  </header>
   
-    <a class='category' href='/blog/categories/animation/'>animation</a>, <a class='category' href='/blog/categories/ascii/'>ascii</a>, <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a>
-  
-</span>
-
-
-  </span>
-
-  
-</article>
-
-          </div>
-        </div>
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h2>
-  
-  <p>
-    <h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
-
-<p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
-
-<p>FYI for the rest of the post, I&rsquo;m going to use &ldquo;<em>map</em>&rdquo; instead of <em>map</em> and <em>collect</em> because <em>map</em> and <em>collect</em> are identical. That is, they do the exact same thing. The only difference is that &ldquo;map&rdquo; is 3 characters to type but &ldquo;collect&rdquo; is more descriptive as to what’s going. You can think of it like we&rsquo;re collecting our new array elements and returning that collection as an array.</p>
-
-<p>If you&rsquo;re trying to do all that with <em>each</em> but adding on some <em>if</em> statements to determine what you&rsquo;re shoveling, you should look at some other methods like <em>find</em>, <em>select</em>, and many others!</p>
-
-<h2>Yield is awesome!</h2>
-
-<p>First, lets talk about what these iterator methods are doing. In order to dig into that, we need to discuss the <em>yield</em> keyword. <em>Yield</em> is a way to pass a block of code into an method with the arguments. For example, to demonstrate how <em>yield</em> interrupts a method to call on a separate block:</p>
-
-<pre><code class="ruby">def interrupt_this_method(number)
-    puts "thing one"
-    puts yield(number)
-    puts "thing two"
-end
-
-interrupt_this_method(3) {|i| i * 2}
-
-#=&gt;
-‘thing one’
-6
-‘thing two’
-</code></pre>
-
-<p>The <em>yield</em> stops the method from putting the second statement until it has a chance to call whatever argument we passed into the method with the arguments in the block on the argument we pass into <em>yield</em>. We can use <em>yield</em> with a looping method like <em>while</em> to emulate our <em>each</em> and <em>map</em> methods to get under the hood.</p>
-
-<h2>What is going on with Each?</h2>
-
-<p>Now we’ll write our own <em>each</em> method, without using “<em>each</em>.” Aside from giving us some insight into what’s actually happening with our <em>each</em> method, it will show us how much time our higher level methods are saving us.</p>
-
-<pre><code class="ruby">def generic_each_array_method_with_iterator(array)
-  i = 0
-  while i &lt; array.length
-    yield array[i]
-        i = i + 1
-  end
-  array
-end
-</code></pre>
-
-<p>So far, we have a generic method that takes an array as an argument, as well as a block of code, sets the variable i to 0 and operates our code on each element of our array, adding 1 to the i variable, between each iteration, and stopping the <em>yield</em> when we’ve hit all the elements. We then return the original array that was passed in. We can use this to pass any block into our method with any array. Let’s give it a try:</p>
-
-<pre><code class="ruby">generic_each_array_method_with_iterator([1, 2, 3, 4, 5]) {|num| puts num * 2}
-#=&gt;
-2
-4
-6
-8
-10
-[1,2,3,4,5]
-</code></pre>
-
-<p>That’s exactly what we get when we hard code the block into our method using <em>each</em>.</p>
-
-<pre><code class="ruby">def times_two(array)
-  array.each {|num| puts num * 2}
-end
-
-times_two([1, 2, 3, 4, 5])
-#=&gt;
-2
-4
-6
-8
-10
-[1,2,3,4,5]
-</code></pre>
-
-<p>Pretty cool, right! The <em>each</em> method allows us to user the elements in our array, and return the original array. As you can see, the <em>each</em> method is really easy to write, but a lot less flexible than the <em>yield</em> method. That is fine because we don’t want to keep writing code strings to pass in with our arguments every time we want to use a method.</p>
-
-<h2>What&rsquo;s going on with Map?</h2>
-
-<p>Let’s take a look at how <em>map</em> works. This is our generic <em>map</em> method that relies on <em>yield</em>, instead of the explicitly calling on <em>map</em>.</p>
-
-<pre><code class="ruby">def generic_map_array_method_with_iterator(array)
-  new_array = []
-  i = 0
-  while i &lt; array.length
-    new_array &lt;&lt; yield(array[i])
-        i = i + 1
-  end
-  new_array
-end
-</code></pre>
-
-<p>The difference here, from our generic <em>each</em> method, is that we’re creating a new array at the start of our method. Then, we shovel the results of our yielded block into the new array instead of just executing those blocks. At the end of the method, we return the new_array instead of the original array. So for the following argument and block this is what we’ll get:</p>
-
-<pre><code class="ruby">generic_map_array_method_with_iterator([1,2,3,4,5]) {|num| num * 2}
-#=&gt;  [2, 4, 6, 8, 10]
-</code></pre>
-
-<p>That’s exactly what we get when we hard code our block into a map/collect method</p>
-
-<pre><code class="ruby">def multiply_array_elements_by_two(array)
-  array.map {|num| num * 2}
-end
-
-multiply_array_elements_by_two([1,2,3,4,5])
-#=&gt; [2, 4, 6, 8, 10]
-</code></pre>
-
-<p>Sweet!</p>
-
-<h3>TL;DR</h3>
-
-<p><em>Map</em> and <em>collect</em> are identical methods. If you want to perform some action on variables, call other methods depending on our array elements, etc., use <em>each</em>. If you want to return a new array based on some manipulation of your array, use <em>map</em>.</p>
-
-<p>Happy coding!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2017</h2>
 
-
-
-<time datetime="2017-03-21T16:21:57-04:00" pubdate data-updated="true"></time>
-    
-
-in
-<span class="categories">
+<article>
   
-    <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>
-  
-</span>
+<h1><a href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/">Building a Game: Generate Unique and Random X and Y Coordinates</a></h1>
+<time datetime="2017-06-04T12:39:18-04:00" pubdate><span class='month'>Jun</span> <span class='day'>04</span> <span class='year'>2017</span></time>
 
-
-  </span>
-
-  
-</article>
-
-          </div>
-        </div>
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/03/14/my-first-post-on-octopress/">My First Post on Octopress</a></h2>
-  
-  <p>
-    <p>&ldquo;Hello, World.&rdquo;</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2017-03-14T19:02:43-04:00" pubdate data-updated="true"></time>
-    
-
-in
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/school/'>school</a>
-  
-</span>
-
-
-  </span>
-
-  
-</article>
-
-          </div>
-        </div>
-      
-    </div>
-  </div>
-</div>
-
-    <footer id="footer" class="her-row">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-1">
-  <a href="/"><h4>Home</h4></a>
-</div>
-
-<div class="col-md-2">
-  <div class="social-icon-list">
-    
-
-    
-
-    
-
-    
-  </div>
-</div>
-
-<div class="pull-right">
-  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
-</div>
-
-
-    </div>
-  </div>
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
 </footer>
 
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/">Create a Quick TDD Environment for Javascript</a></h1>
+<time datetime="2017-04-30T20:32:44-04:00" pubdate><span class='month'>Apr</span> <span class='day'>30</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/development/'>development</a>, <a class='category' href='/blog/categories/driven/'>driven</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/jasmine/'>jasmine</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/mocha/'>mocha</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/tdd/'>tdd</a>, <a class='category' href='/blog/categories/test/'>test</a></span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2017/04/13/bringing-terminal-applications-to-life-cli-animations-with-ruby/">Bringing Terminal Applications to Life: CLI Animations With Ruby</a></h1>
+<time datetime="2017-04-13T17:46:02-04:00" pubdate><span class='month'>Apr</span> <span class='day'>13</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/animation/'>animation</a>, <a class='category' href='/blog/categories/ascii/'>ascii</a>, <a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a></span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h1>
+<time datetime="2017-03-21T16:21:57-04:00" pubdate><span class='month'>Mar</span> <span class='day'>21</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/array/'>array</a>, <a class='category' href='/blog/categories/collect/'>collect</a>, <a class='category' href='/blog/categories/find/'>find</a>, <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/map/'>map</a>, <a class='category' href='/blog/categories/methods/'>methods</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2017/03/14/my-first-post-on-octopress/">My First Post on Octopress</a></h1>
+<time datetime="2017-03-14T19:02:43-04:00" pubdate><span class='month'>Mar</span> <span class='day'>14</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/flatiron/'>flatiron</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
+</footer>
+
+
+</article>
+
+</div>
+
+  
+</article>
+
+
+</div>
+
+<aside class="sidebar">
+  
     
-  </body>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
 </html>

@@ -3,10 +3,6 @@
 <!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
 <!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Category: React - Creative Coding</title>
@@ -28,325 +24,132 @@
   <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 </head>
 
-  <body>
-    <a href="/" class="home-icon">
-      <img src="/images/home.png"/>
-    </a>
-
-    <div class="all-posts">
-  <div class="container">
-    <div class="row">
-      <div class="list-title col-md-offset-3 col-md-6">
-        <h4>Posts in react</h4>
-      </div>
-    </div>
-  </div>
-
-  <div class="article-list">
-    <div class="container">
-      
-        
-        <div class="row">
-          <div class="col-md-offset-3 col-md-6">
-            <article>
-  <h2><a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a></h2>
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
   
-  <p>
-    <h2>What is Refactoring?</h2>
-
-<p>First, a quick note on refactoring code for those new to the idea. Lot&rsquo;s of different configurations and styles of code will get the job done. Refactoring is about organizing and cleaning up your code for a few reasons.</p>
-
-<p>First is readability. If someone else is going to work on something you built, you want to give them an easy way to understand what is going on. Not to mention, if you want to pick up an old codebase after a few months, you want to leave yourself a nice rode map to what things are doing and where. Refactoring your code will help keep concerns separate and will tell you exactly where to look to find each piece of functionality.</p>
-
-<p>Second is optimization. This is a bit trickier and has less to do with organization and naming conventions and more to do with an understanding of which operations and methods are more costly to perform than others. There are a lot of great resources on this, but we&rsquo;re going to stick with the readability side of refactoring for this post.</p>
-
-<h2>What is Component Design?</h2>
-
-<p>When deep into a code project, I can get tunnel vision on the tasks I&rsquo;m trying to solve. I&rsquo;m deep into a file, I know exactly where everything is and how it all interacts. But when I come back to that document a day later, it just looks like a mess. If a bug creeps in, I&rsquo;m helpless. The component container design pattern is a really helpful way to organize React code. There are a few simple rule of thumb which we will demo in the rest of the post. Simply put, Containers are responsible for fetching data, keeping state and behavior, and passing the relevant bits of info down to its children. Components are ideally simple functions that receive props from their parent container and render HTML as JSX.</p>
-
-<h2>Let&rsquo;s Build a Simple App in One Messy Place</h2>
-
-<p>To demo this idea, we&rsquo;re going to build a very simple PetBook app with three pieces. First there is a simple nav bar with our Logo. Second there is a form to add animal names. Third, there is a list of the animals we&rsquo;ve entered. The App will work like this:</p>
-
-<p><img src="/assets/petbook.gif" alt="PetBook demo gif" /></p>
-
-<p>We&rsquo;re using three files to build PetBook: index.html, index.js, and app.js. We&rsquo;re also using Materialize CSS for some styling. Let&rsquo;s take a look at our index.html page:</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset="utf-8"&gt;
-    &lt;title&gt;React Intro&lt;/title&gt;
-    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-
-    &lt;div id="container" class="container"&gt;&lt;/div&gt;
-
-    &lt;script type="text/javascript" src='bundle.js'&gt;&lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>It&rsquo;s super short and sweet. We&rsquo;re bundling our files using webpacks to make development iterations quick and painless. Otherwise, our entire app is being rendered in the container div. Next, let&rsquo;s take a look at index.js:</p>
-
-<pre><code>import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
-ReactDOM.render(&lt; App /&gt;, document.getElementById('container'))
-</code></pre>
-
-<p>Another super short and sweet file. All this is doing is requiring react and react-dom and rendering the app to the index.html page by attaching its contents to the div with the id of &lsquo;container.&rsquo; Finally, let&rsquo;s take a look at where all the magic is happening. Our colossal App.js file:</p>
-
-<pre><code>import React, {Component} from 'react'
-export default class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      input: '',
-      animals: []
-    }
-  }
-
-  handleChange(e){
-    this.setState({
-      input: e.target.value
-    })
-  }
-
-  handleSubmit(e) {
-    e.preventDefault()
-    this.setState({
-      animals: [...this.state.animals, this.state.input]
-    })
-    this.setState({
-      input: ''
-    })
-  }
-
-  render() {
-    return (
-      &lt;div className='zoobook'&gt;
-
-        &lt;nav&gt;
-          &lt;div className='nav-wrapper'&gt;
-            &lt;a className='brand-logo'&gt;
-              PetBook
-            &lt;/a&gt;
-          &lt;/div&gt;
-        &lt;/nav&gt;
-        &lt;div className="row"&gt;
-          &lt;div className="col s6"&gt;
-            &lt;div className={'zoo-form'}&gt;
-              &lt;h3&gt;Add a Pet&lt;/h3&gt;
-              &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
-                &lt;label&gt;
-                  Animal Name:
-                  &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
-                &lt;/label&gt;
-                &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
-              &lt;/form&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-
-          &lt;div className="col s6"&gt;
-            &lt;div className='zoo-list'&gt;
-              &lt;h3&gt;Your Pets&lt;/h3&gt;
-              &lt;ul&gt;
-                {this.state.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
-              &lt;/ul&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-
-        &lt;/div&gt;
-
-      &lt;/div&gt;
-    )
-  }
-}
-</code></pre>
-
-<p>This file is huge. Especially for such a simple app! This will get very tricky to debug or to add to in a hurry, not to mention, working on this file will wear out your mouse&rsquo;s scroll wheel really quickly. Looking at the working app, it&rsquo;s pretty easy to see that there are three things going on. First, there&rsquo;s the nav bar. Second is the form for entering animal names. Last is the Pet list. I wonder if there&rsquo;s a way to organize this. There totally is!</p>
-
-<h2>Separating Concerns Out Nicely</h2>
-
-<p>Using our guidelines from before, we can say that the form is the only part of our app responsible for creating and handling data, so that will be a stateful component. Everything else can be a functional, or presentational container. We&rsquo;re going to organize all this into a folder called &lsquo;src&rsquo;. Don&rsquo;t forget to update any dependencies in your application to account for the path changes. The App.js file now lives in our containers folder and is only responsible for rendering the nav bar and the Pet Form container. It now looks like this:</p>
-
-<pre><code>import React, {Component} from 'react'
-import NavBar from './NavBar'
-import PetFormContainer from '../containers/PetFormContainer'
-function App() {
-  return (
-    &lt;div className='zoobook'&gt;
-      &lt;NavBar /&gt;
-      &lt;PetFormContainer /&gt;
-    &lt;/div&gt;
-  )
-}
-export default App
-</code></pre>
-
-<p>Short and sweet! Next is our nav bar component. The job of our nav bar is only to render the nav bar. Pretty straight forward, right! In the future. If we want to add more pages to this application, we can include this nav bar container and keep any changes consistent across our entire app just by updating this file. Here it is:</p>
-
-<pre><code>import React from 'react'
-function NavBar() {
-  return (
-    &lt;nav&gt;
-      &lt;div className='nav-wrapper'&gt;
-        &lt;a className='brand-logo'&gt;
-          PetBook
-        &lt;/a&gt;
-      &lt;/div&gt;
-    &lt;/nav&gt;
-  )
-}
-export default NavBar
-</code></pre>
-
-<p>This is looking great so far, but we haven&rsquo;t gotten to the meat and potatoes of our petbook app yet. Here is our Pet  Form container it is a stateful classical container that inherits from the react compnent library. It&rsquo;s responsible for controlling the user input, maintaining a list of the user&rsquo;s pets in an animals array, and it is able to add a new animal from the form to the animals array and rerender the Pet List component to display the changes. Here it is:</p>
-
-<pre><code>import React, {Component} from 'react'
-import PetList from '../components/PetList'
-export default class PetFormContainer extends Component {
-  constructor() {
-    super()
-    this.state = {
-      input: '',
-      animals: []
-    }
-  }
-  handleChange(e){
-    this.setState({
-      input: e.target.value
-    })
-  }
-  handleSubmit(e) {
-    e.preventDefault()
-    this.setState({
-      animals: [...this.state.animals, this.state.input]
-    })
-    this.setState({
-      input: ''
-    })
-  }
-  render() {
-    return (
-      &lt;div className="row"&gt;
-        &lt;div className="col s6"&gt;
-          &lt;div className={'zoo-form'}&gt;
-            &lt;h3&gt;Add a Pet&lt;/h3&gt;
-            &lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
-              &lt;label&gt;
-                Animal Name:
-                &lt;input type='text' value={this.state.input} onChange={this.handleChange.bind(this)}/&gt;
-              &lt;/label&gt;
-              &lt;input className="waves-effect waves-light btn" type='submit' value='Create Animal'/&gt;
-            &lt;/form&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-        &lt;PetList animals={this.state.animals}/&gt;
-      &lt;/div&gt;
-    )
-  }
-}
-</code></pre>
-
-<p>A lot of this should look familiar from our original App.js file. This is the longest file in our new design pattern, but it is much simpler than our original App file. It is only responsible for maintaining the state, keeping an eye on the form, and sending along any new info to the Pet List component. Here&rsquo;s that final component:</p>
-
-<pre><code>import React from 'react'
-function PetList( props ) {
-  return (
-    &lt;div className="col s6"&gt;
-      &lt;div className='zoo-list'&gt;
-        &lt;h3&gt;Your Pets&lt;/h3&gt;
-        &lt;ul&gt;
-          {props.animals.map(function(animal) {return &lt;div className="card-panel" key={animal}&gt;{animal}&lt;/div&gt;})}
-        &lt;/ul&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  )
-}
-export default PetList
-</code></pre>
-
-<p>The only difference here is that the Pet List component is getting the animals array passed from the Pet Form container as a prop.</p>
-
-<h2>Conclusion</h2>
-
-<p>That&rsquo;s it. Our singe file app has been successfully refactored into a component and container design pattern. It will make expansion of our app much simpler by modularizing the responsibilities. It will also make the app much easier to maintain since we know exactly where to go if anything breaks. No more long scrolling sessions, straining our eyes to find a section of our app file. Happy coding!</p>
-
-  </p>
-  <span class="meta">
-    written 
-
-
-
-
-
-
-
-
+    <h2>A Creative Writer's Guide to Code</h2>
   
+</hgroup>
 
-
-
-<time datetime="2017-05-21T21:34:14-04:00" pubdate data-updated="true"></time>
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
     
-
-in
-<span class="categories">
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
   
-    <a class='category' href='/blog/categories/class/'>class</a>, <a class='category' href='/blog/categories/components/'>components</a>, <a class='category' href='/blog/categories/containers/'>containers</a>, <a class='category' href='/blog/categories/flatriron/'>flatriron</a>, <a class='category' href='/blog/categories/functional/'>functional</a>, <a class='category' href='/blog/categories/presentational/'>presentational</a>, <a class='category' href='/blog/categories/react/'>react</a>, <a class='category' href='/blog/categories/school/'>school</a>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
   
-</span>
+  <header>
+    <h1 class="entry-title">Category: React</h1>
+    
+  </header>
+  
+  <div id="blog-archives" class="category">
 
 
-  </span>
+
+  
+  <h2>2017</h2>
+
+<article>
+  
+<h1><a href="/blog/2017/05/21/react-containers-and-components-classes-vs-functions/">React Containers and Components: Classes vs Functions</a></h1>
+<time datetime="2017-05-21T21:34:14-04:00" pubdate><span class='month'>May</span> <span class='day'>21</span> <span class='year'>2017</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/class/'>class</a>, <a class='category' href='/blog/categories/components/'>components</a>, <a class='category' href='/blog/categories/containers/'>containers</a>, <a class='category' href='/blog/categories/flatriron/'>flatriron</a>, <a class='category' href='/blog/categories/functional/'>functional</a>, <a class='category' href='/blog/categories/presentational/'>presentational</a>, <a class='category' href='/blog/categories/react/'>react</a>, <a class='category' href='/blog/categories/school/'>school</a></span>
+</footer>
+
+
+</article>
+
+</div>
 
   
 </article>
 
-          </div>
-        </div>
-      
-    </div>
-  </div>
+
 </div>
 
-    <footer id="footer" class="her-row">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-1">
-  <a href="/"><h4>Home</h4></a>
-</div>
-
-<div class="col-md-2">
-  <div class="social-icon-list">
+<aside class="sidebar">
+  
     
-
-    
-
-    
-
-    
-  </div>
-</div>
-
-<div class="pull-right">
-  <h4>Powered by <a href="http://octopress.org/">Octopress</a>. Designed by <a href="http://AdrianArtiles.com">Adrian Artiles</a>.</h4>
-</div>
+  
+</aside>
 
 
     </div>
   </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
 </footer>
+  
 
-    
-  </body>
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
 </html>
