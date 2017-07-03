@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Dynamic Forms in React: Part 1, Regular React Forms - Creative Coding</title>
+  <meta name="author" content="Sammy Steiner">
+
+  
+  <meta name="description" content="What is a Nested Dynamic Form Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
+  
+    <h2>A Creative Writer's Guide to Code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Dynamic Forms in React: Part 1, Regular React Forms</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-07-02T22:11:18-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2017</span></span> <span class='time'>10:11 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>What is a Nested Dynamic Form</h2>
+
+<p>Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old-school forms just wont cut it. For Habits, I wanted to give the user the ability to add as many fields to the form as they needed to express their goal.</p>
+
+<p>Habits is an activity tracking app that is part accountability through gamificaiton, part exploration of the quantified self, and part guided self betterment. When using the Goal creation form, users are encouraged to give their goal a name, as well as a brief description or motivational sentence. Then, users are asked to divide their goal into smaller, more manageable chunks, divided into phases of time, and each phase is comprised of various actions. When the goal is created, the user&rsquo;s inputs are translated into a card that allows them to check off what they&rsquo;ve accomplished toward their goal, divides up the work according to their schedule, and gives them insights into their progress.</p>
+
+<p>In order to cover all that, our form needs to be very special. This is what it&rsquo;s going to look like:</p>
+
+<p><img src="/assets/goalForm.gif" alt="Dynamic form gif" /></p>
+
+<p>But we won&rsquo;t get to that in this post. In this post, we will go through the basics of React forms to get us up to speed for what&rsquo;s coming in our next post.</p>
+
+<h2>Standard Javascript Forms</h2>
+
+<p>Let&rsquo;s build a simple from to accept a &lsquo;name&rsquo; input from the user and send if off to our database, in vanilla Javascript. Here&rsquo;s what our form would look like.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form id="goal-form"&gt;
+</span><span class='line'>  &lt;input type="text" id="name" name="name" /&gt;  
+</span><span class='line'>  &lt;input type="submit" value="submit"&gt;
+</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next we need to create an event handler on window.load to listen for the submit event and hanle sending our information to the api.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document.querySelector("#goal-form").addEventListener("submit", function(e){
+</span><span class='line'>    e.preventDefault()    
+</span><span class='line'>    // stop the form from submitting and refreshing the page
+</span><span class='line'>    // you can add some validations here
+</span><span class='line'>    var name = document.getElementById('name').value
+</span><span class='line'>    return createGoal(name)
+</span><span class='line'>    // calling some function that sends a post request to our api with the value of the name input.    
+</span><span class='line'>})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s one way to do things in vanilla Javascript. It&rsquo;s messy, slow, and not very efficient. Things can get even crazier when there are lots of elements on your page. Searching through all those DOM nodes can get expensive. And when we want to do something dynamic in our form, like in the example above, this process can get very complicated very quickly. React gives us a better way.</p>
+
+<h2>Controlled inputs</h2>
+
+<p>In React, we try and stay away from the DOM, and use the virtual DOM instead. This means that when we go and look at what the user entered in our form, instead of checking for the form input values in the DOM, we store it in temporary memory, in the React component&rsquo;s state, and just grab it from there when we&rsquo;re ready.</p>
+
+<p>Our React state for a name input looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>...
+</span><span class='line'>export default class GoalForm extends Component {
+</span><span class='line'>  constructor(){
+</span><span class='line'>    super()
+</span><span class='line'>    this.state = {
+</span><span class='line'>      name: ''
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>All this does is create a GoalForm class component in React with a state object that has a value of &lsquo;name&rsquo;, which points to an empty string.</p>
+
+<p>Instead of having the React component store the information of the user&rsquo;s input and have the user&rsquo;s input be stored in the DOM, which would break the single source of truth convention, we just have the component&rsquo;s value display the state. That is called a controlled input.</p>
+
+<p>Our form looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form onSubmit={this.handleSubmit.bind(this)}&gt;
+</span><span class='line'>  &lt;input label='name' type='text' value={this.state.name} onChange={this.handleChange.bind(this)} /&gt;
+</span><span class='line'>  &lt;input type='submit' value='submit' /&gt;
+</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This form has one text input field for a name, that shows the value of the name object in the component&rsquo;s state. When a user enters something in the input field, that input is intercepted by our handleChange function, which updates the state, the Component is re-rendered, and the new state is shown as the value.</p>
+
+<h2>Handling Changes and form Submission</h2>
+
+<p>Our handleSubmit and handleChange functions look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>handleSubmit(e){
+</span><span class='line'>  e.preventDefault()
+</span><span class='line'>  this.props.createGoal(this.state.name)
+</span><span class='line'>  // this is a function passed down from another component via props. In this case, it will send a post request to an api with the 'name' the user entered.
+</span><span class='line'>  this.setState({name: ''})
+</span><span class='line'>  // this.setState is a React function that sets the state of the current component to the argument that is passed in and it also forces the component to re-render.
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>handleChange(e){
+</span><span class='line'>  e.preventDefault()
+</span><span class='line'>  this.setState({name: e.target.value })
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>This is a lot to wrap your head around, controlled inputs, preventing a lot of default actions, completely sidestepping the DOM! I know, it&rsquo;s a lot. But it&rsquo;s about to get crazier. In part two, we&rsquo;ll discuss how to give the user the ability to dynamically add inputs in this controlled system. Stay tuned for part II</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Sammy Steiner
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-07-02T22:11:18-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2017</span></span> <span class='time'>10:11 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dynamic/'>dynamic</a>, <a class='category' href='/blog/categories/forms/'>forms</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/nested/'>nested</a>, <a class='category' href='/blog/categories/react/'>react</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/06/04/generate-unique-and-random-x-and-y-coordinates/" title="Previous Post: Building a Game: Generate Unique and Random X and Y Coordinates">&laquo; Building a Game: Generate Unique and Random X and Y Coordinates</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
