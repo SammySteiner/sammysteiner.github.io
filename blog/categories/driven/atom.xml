@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Driven | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/driven/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-07T15:19:19-04:00</updated>
+  <updated>2017-07-07T15:24:11-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -60,51 +60,30 @@
 <p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
 
 <p>In test.js:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">var</span> <span class="n">expect</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">expect</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="n">var</span> <span class="n">myCode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;describe (&amp;lsquo;test&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">  it(&amp;lsquo;returns &amp;ldquo;Hello, world!&amp;rdquo; as a string&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">    expect(myCode.test()).to.be(&amp;ldquo;Hello, world!&amp;rdquo;)</span>
-</span><span class='line'><span class="sr">  })</span>
-</span><span class='line'><span class="sr">})&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="no">All</span> <span class="n">other</span> <span class="n">tests</span> <span class="n">below</span><span class="o">&lt;</span><span class="sr">/h2&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>
-</span><span class='line'><span class="sr">In terminal: `npm install --save expect.js`</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">Now we&#39;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">to pass our first test, add the following code to index.js:</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;var test = function() {</span>
-</span><span class='line'><span class="sr">  return &amp;ldquo;Hello, world!&amp;rdquo;</span>
-</span><span class='line'><span class="sr">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
+```ruby
+var expect = require(&lsquo;expect.js&rsquo;);
+var myCode = require(&lsquo;../index.js&rsquo;)</p>
+
+<p>describe (&lsquo;test&rsquo;, function() {
+  it(&lsquo;returns &ldquo;Hello, world!&rdquo; as a string&rsquo;, function() {
+    expect(myCode.test()).to.be(&ldquo;Hello, world!&rdquo;)
+  })
+})</p>
+
+<h2>All other tests below</h2>
+
+<pre><code>
+In terminal: `npm install --save expect.js`
+
+Now we're ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.
+
+to pass our first test, add the following code to index.js:
+</code></pre>
+
+<p>var test = function() {
+  return &ldquo;Hello, world!&rdquo;
+}
+```</p>
 
 <p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
 

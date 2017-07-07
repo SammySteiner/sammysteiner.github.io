@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Nested | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/nested/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-07T15:19:19-04:00</updated>
+  <updated>2017-07-07T15:24:11-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -117,7 +117,7 @@
 
 <h2>Conclusion</h2>
 
-<p>There are some pretty cool things you can do with react. This form was a really fun challenge, and I&rsquo;m really proud of what I built and I learned a lot in the process. If you want to check out the app in action, you can find it <a href="habits-sammy-steiner.herokuapp.com">here</a> hosted on heroku for free, so I apologize for the loading time.</p>
+<p>There are some pretty cool things you can do with react. This form was a really fun challenge, and I&rsquo;m really proud of what I built and I learned a lot in the process. If you want to check out the app in action, you can find it <a href="https://habits-sammy-steiner.herokuapp.com/">here</a> hosted on heroku for free, so I apologize for the loading time.</p>
 
 <p>Thanks for checking it out!</p>
 ]]></content>
