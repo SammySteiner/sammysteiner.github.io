@@ -8,7 +8,7 @@ categories: Javascript React Nested Dynamic Forms
 
 ## What is a Nested Dynamic Form
 
-Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old-school forms just wont cut it. For [Habits]('habits-sammy-steiner.herokuapp.com'), I wanted to give the user the ability to add as many fields to the form as they needed to express their goal.
+Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old-school forms just wont cut it. For [Habits](habits-sammy-steiner.herokuapp.com), I wanted to give the user the ability to add as many fields to the form as they needed to express their goal.
 
 Habits is an activity tracking app that is part accountability through gamificaiton, part exploration of the quantified self, and part guided self betterment. When using the Goal creation form, users are encouraged to give their goal a name, as well as a brief description or motivational sentence. Then, users are asked to divide their goal into smaller, more manageable chunks, divided into phases of time, and each phase is comprised of various actions. When the goal is created, the user's inputs are translated into a card that allows them to check off what they've accomplished toward their goal, divides up the work according to their schedule, and gives them insights into their progress.
 
@@ -99,4 +99,4 @@ handleChange(e){
 
 ## Conclusion
 
-This is a lot to wrap your head around, controlled inputs, preventing a lot of default actions, completely sidestepping the DOM! I know, it's a lot. But it's about to get crazier. In part two, we'll discuss how to give the user the ability to dynamically add inputs in this controlled system. Stay tuned for part II
+This is a lot to wrap your head around, controlled inputs, preventing a lot of default actions, completely sidestepping the DOM! I know, it's a lot. But it's about to get crazier. In part two, we'll discuss how to give the user the ability to dynamically add inputs in this controlled system. Stay tuned for [Part II](https://sammysteiner.github.io/blog/2017/07/05/dynamic-forms-in-react-part-2/).
