@@ -4,7 +4,7 @@
   <title><![CDATA[Category: React | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/react/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-02T23:25:12-04:00</updated>
+  <updated>2017-07-07T15:04:44-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -14,13 +14,123 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Dynamic Forms in React: Part 2]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/07/05/dynamic-forms-in-react-part-2/"/>
+    <updated>2017-07-05T11:14:22-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/07/05/dynamic-forms-in-react-part-2</id>
+    <content type="html"><![CDATA[<h2>Recap of Part 1</h2>
+
+<p>In <a href="" title="https://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react/">Part 1</a>, we talked about simple forms in React. Namely, we talked about controlling inputs, updating state, and handling submissions. All of that assumes our form is static and we know the shape of our state. &lsquo;Shape&rsquo; in this context means the data contained in the state object, the keys, the types of values, etc.</p>
+
+<p>In part two, we&rsquo;re going to talk about a more complex form. This form needs a way to update itself, and because we want to control the inputs, the form needs a way to update the state. Finally, when we send off our state object to an API, we need to know how to deconstruct that state regardless of how many phases and actions a user added to our form.</p>
+
+<p>Here&rsquo;s our gif from Part 1 to demonstrate the kind of form interaction we&rsquo;re going for:
+<img src="/assets/goalForm.gif" alt="Dynamic form gif" /></p>
+
+<h2>Designing the Form UX</h2>
+
+<p>When writing code in react, I find it helpful to start with the design I want to implement. Starting from the design makes it really easy for me to think through the components I want to build, now to nest them, and what props they&rsquo;ll need to work with.</p>
+
+<p>The first part of the form i pretty standard. Each goal should have a title and a description. I find it really helpful to think about the description as the motivation behind the goal. ie. &ldquo;I want to go to the gym twice a week to get in shape for the summer.&rdquo; or &ldquo;I want to go get ready to run a half marathon by September.&rdquo; I find it&rsquo;s really helpful to break down big goals into manageable bits of work, and give myself a set amount of time to finish my task. Deadlines are my friend!</p>
+
+<p>This tells me I want a button in my form to add a &ldquo;phase&rdquo;. A phase should have a timeframe, a number of days within which I need to complete this task, and a button to create actions. Each time I press this button, I need a new input for a description of an action. So we are creating dynamic inputs inside dynamically created inputs in a form with controlled inputs. That was a pretty scary problem to start with. But I knew my next step and it seemed like a fun thought challenge. How do I model this data?</p>
+
+<h2>Modeling the Data</h2>
+
+<p>The process of defining my state took a couple iterations to determine the best way to structure my data so it would play nicely with my database and wouldn&rsquo;t require more looping than necessary. I started with what was going to be static, since that was pretty simple.</p>
+
+<pre><code>  state = {
+    title: '',
+    description: '',
+    repeat: false,
+    // Some way to show all our goals
+  }
+</code></pre>
+
+<p>Great that&rsquo;s three quarters of our state defined! We&rsquo;re 75% done with this.</p>
+
+<p>We&rsquo;re going to want to have a list of goals, in order so we know which comes first, second, etc. That means we want an array of goals. Each element of our goal array is going to need a phase length and a list of actions. That means each element of our goal array is going to be an object with two keys, &ldquo;phase&rdquo; and &ldquo;actions&rdquo;. Actions is going to be a list of descriptions, that sounds like an array.</p>
+
+<p>Writing that out gives us this:</p>
+
+<pre><code>goals: [
+  {
+    phase: '',
+    actions: []
+  }
+]
+</code></pre>
+
+<p>When we start filling this up with goals, our state will eventually look like this:</p>
+
+<pre><code>  state ={
+    title: as a string,
+    description: as a text area,
+    repeat: true of false boolean,
+    goals: [
+      {
+        phase: length as a number,
+        actions: [
+          description for action 1, description for action 2, etc.
+        ]
+      },
+      {
+        phase: length as a number,
+        actions: [
+          description for action 1, description for action 2, etc.
+        ]
+      },
+      etc.
+    ]
+  }
+</code></pre>
+
+<p>Ok, that looks reasonable! Now that we know what we want the state to look like, and how it will be modified at each step of our user&rsquo;s journey through the form, we can start thinking through the code to make that happen.</p>
+
+<h2>Sudo Code for the Form</h2>
+
+<p>We&rsquo;re just going to sudo code this for the blog because the actual code gets very long, and a bit hairy because I decided to put it inside a modal. If you want to check out the actual code, you can find a link to my repo <a href="" title="https://github.com/SammySteiner/habits-client">here</a>.</p>
+
+<pre><code>  &lt;form onSubmit={send our form data to the API}&gt;
+    &lt;input type='text' name='title' value={this.state.title} onChange={update the state with this change}/&gt;
+    &lt;input type='text' name='description' value={this.state.title} onChange={update the state with this change}/&gt;
+    &lt;input type='textArea' name='repeat' value={this.state.description} onChange={update the state with this change}/&gt;
+    &lt;input type='checkbox' checked={this.state.repeat} onChange={update the state with this change}/&gt;
+    &lt;button type='button' onClick={ call our add phase function }&gt;Add Phase&lt;/button&gt;
+    &lt;input type='submit' value='submit' name='Create Goal'/&gt;
+    &lt; render all the Goal components based on the goals in the state &gt;
+  &lt;/form&gt;
+
+  addPhaseFunction(){
+    copy the state
+    add a new element to the goals array with the object we described above
+  }
+</code></pre>
+
+<p>Then we need to import a goal component that maps over each element of the goals array and displays a phase input that is controlled by the value of the phase key in the object of the goals array. We also need to pass that input a function to update the phase in the state on change.</p>
+
+<p>Additionally our goal component needs to show a button similar to the &ldquo;Add Phase&rdquo; button, but this one will say Add action. It only needs to update the state by pushing an empty string onto the actions array in the  object.</p>
+
+<p>Finally, our goal component needs to map over the action components and display in input for each of them. It then needs to use that element in the actions array to control the state and pass that input a function to update that state.</p>
+
+<p>This should update our state dynamically, add goal objects to our goals array, add action descriptions to the actions array of it&rsquo;s associated goals in the goals array. Our form component will keep updating every time the state is set by showing the new components with the new buttons and inputs they are mapping over. And Voila, it works!</p>
+
+<h2>Conclusion</h2>
+
+<p>There are some pretty cool things you can do with react. This form was a really fun challenge, and I&rsquo;m really proud of what I built and I learned a lot in the process. If you want to check out the app in action, you can find it <a href="" title="habits-sammy-steiner.herokuapp.com">here</a> hosted on heroku for free, so I apologize for the loading time.</p>
+
+<p>Thanks for checking it out!</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Dynamic Forms in React: Part 1, Regular React Forms]]></title>
     <link href="http://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react/"/>
     <updated>2017-07-02T22:11:18-04:00</updated>
     <id>http://sammysteiner.github.io/blog/2017/07/02/dynamic-forms-in-react</id>
     <content type="html"><![CDATA[<h2>What is a Nested Dynamic Form</h2>
 
-<p>Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old-school forms just wont cut it. For Habits, I wanted to give the user the ability to add as many fields to the form as they needed to express their goal.</p>
+<p>Sometimes a form needs to expect the unexpected. When that happens, when the user needs freedom and flexibility, old-school forms just wont cut it. For <a href="" title="habits-sammy-steiner.herokuapp.com">Habits</a>, I wanted to give the user the ability to add as many fields to the form as they needed to express their goal.</p>
 
 <p>Habits is an activity tracking app that is part accountability through gamificaiton, part exploration of the quantified self, and part guided self betterment. When using the Goal creation form, users are encouraged to give their goal a name, as well as a brief description or motivational sentence. Then, users are asked to divide their goal into smaller, more manageable chunks, divided into phases of time, and each phase is comprised of various actions. When the goal is created, the user&rsquo;s inputs are translated into a card that allows them to check off what they&rsquo;ve accomplished toward their goal, divides up the work according to their schedule, and gives them insights into their progress.</p>
 
