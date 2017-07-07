@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-07T15:24:11-04:00</updated>
+  <updated>2017-07-07T15:26:29-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -56,25 +56,41 @@ y_values = [1, 2, 1, 2]
 <h2>Let&rsquo;s hard code this to get started</h2>
 
 <p>Now that we have the basic building blocks for our data structure, let&rsquo;s put it together assuming we have the unique values we need. In our two by two grid, with the x_values and y_values arrays, all we need to do is a simple loop to get our unique_coordinates array, and pull off four coordinates at random:
-```Ruby
-unique_coordinates_generator =
-x_values.each_with_index.map do |x, index|
-  [x, y_values[index]]
-end.sample(4)</p>
-
-<h1>>>> [[1,1], [1,2], [2,1], [2,2]]</h1>
-
-<pre><code>
-Perfect! Just note that if you're following along, your coordinates may be in a different order, that's exactly what we want. They should all be unique.
-
-To assign each of these to our game board objects, we can do this by assigning each a value from the unique_coordinates_generator. This isn't the prettiest way to do this, but it will work.
-</code></pre>
-
-<p>player = unique_coordinates_generator[0]
-door = unique_coordinates_generator[1]
-key = unique_coordinates_generator[2]
-monsters = [ unique_coordinates_generator[3] ]
-```</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='Ruby'><span class='line'><span class="n">unique_coordinates_generator</span> <span class="o">=</span>
+</span><span class='line'><span class="n">x_values</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span> <span class="n">index</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_values</span><span class="o">[</span><span class="n">index</span><span class="o">]]</span>
+</span><span class='line'><span class="k">end</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;h1&gt;&gt;&gt;&gt; [[1,1], [1,2], [2,1], [2,2]]&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>
+</span><span class='line'><span class="no">Perfect</span><span class="o">!</span> <span class="no">Just</span> <span class="n">note</span> <span class="n">that</span> <span class="k">if</span> <span class="n">you</span><span class="s1">&#39;re following along, your coordinates may be in a different order, that&#39;</span><span class="n">s</span> <span class="n">exactly</span> <span class="n">what</span> <span class="n">we</span> <span class="n">want</span><span class="o">.</span> <span class="no">They</span> <span class="n">should</span> <span class="n">all</span> <span class="n">be</span> <span class="n">unique</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">To</span> <span class="n">assign</span> <span class="n">each</span> <span class="n">of</span> <span class="n">these</span> <span class="n">to</span> <span class="n">our</span> <span class="n">game</span> <span class="n">board</span> <span class="n">objects</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="k">do</span> <span class="n">this</span> <span class="n">by</span> <span class="n">assigning</span> <span class="n">each</span> <span class="n">a</span> <span class="n">value</span> <span class="n">from</span> <span class="n">the</span> <span class="n">unique_coordinates_generator</span><span class="o">.</span> <span class="no">This</span> <span class="n">isn</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">the</span> <span class="n">prettiest</span> <span class="n">way</span> <span class="n">to</span> <span class="k">do</span> <span class="n">this</span><span class="p">,</span> <span class="n">but</span> <span class="n">it</span> <span class="n">will</span> <span class="n">work</span><span class="o">.</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="n">player</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="n">door</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+</span><span class='line'><span class="n">key</span> <span class="o">=</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
+</span><span class='line'><span class="n">monsters</span> <span class="o">=</span> <span class="o">[</span> <span class="n">unique_coordinates_generator</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>this looks great. The next step is to abstract this to handle grids of any size, with more than four coordinates to accommodate multiple monsters.</p>
 
