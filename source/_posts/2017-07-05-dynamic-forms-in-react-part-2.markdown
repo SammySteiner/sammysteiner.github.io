@@ -109,6 +109,6 @@ This should update our state dynamically, add goal objects to our goals array, a
 
 ## Conclusion
 
-There are some pretty cool things you can do with react. This form was a really fun challenge, and I'm really proud of what I built and I learned a lot in the process. If you want to check out the app in action, you can find it [here](https://www.habits-sammy-steiner.herokuapp.com) hosted on heroku for free, so I apologize for the loading time.
+There are some pretty cool things you can do with react. This form was a really fun challenge, and I'm really proud of what I built and I learned a lot in the process. If you want to check out the app in action, you can find it [here](https://habits-sammy-steiner.herokuapp.com/) hosted on heroku for free, so I apologize for the loading time.
 
 Thanks for checking it out!
