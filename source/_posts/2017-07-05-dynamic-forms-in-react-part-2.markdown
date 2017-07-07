@@ -17,7 +17,15 @@ Here's our gif from Part 1 to demonstrate the kind of form interaction we're goi
 
 ## Designing the Form UX
 
+When writing code in react, I find it helpful to start with the design I want to implement. Starting from the design makes it really easy for me to think through the components I want to build, now to nest them, and what props they'll need to work with.
+
+The first part of the form i pretty standard. Each goal should have a title and a description. I find it really helpful to think about the description as the motivation behind the goal. ie. "I want to go to the gym twice a week to get in shape for the summer." or "I want to go get ready to run a half marathon by September." I find it's really helpful to break down big goals into manageable bits of work, and give myself a set amount of time to finish my task. Deadlines are my friend!
+
+This tells me I want a button in my form to add a "phase". A phase should have a timeframe, a number of days within which I need to complete this task, and a button to create actions. Each time I press this button, I need a new input for a description of an action. So we are creating dynamic inputs inside dynamically created inputs in a form with controlled inputs. That was a pretty scary problem to start with. But I knew my next step and it seemed like a fun thought challenge. How do I model this data?
+
 ## Modeling the Data
+
+
 
 ## Sudo Code for the Form
 
