@@ -9,7 +9,7 @@
   <meta name="author" content="Sammy Steiner">
 
   
-  <meta name="description" content="Recap of Part 1 In Part 1, we talked about simple forms in React. Namely, we talked about controlling inputs, updating state, and handling &hellip;">
+  <meta name="description" content="Getting good at listening This seems to keep coming up in code challenges so I wanted to write about it. Usually this is a piece of a larger &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,137 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/07/14/listening-to-javascript-adding-events/">Listening to Javascript: Adding Events</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-07-14T15:03:14-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>3:03 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Getting good at listening</h2>
+
+<p>This seems to keep coming up in code challenges so I wanted to write about it. Usually this is a piece of a larger challenge, but sometimes these questions are really basic. Sometimes these questions get weird, like in a totally real interview I had:</p>
+
+<p>Interviewer: I want a button to create an alert on the screen.<br/>
+Me: Ok. Does this button submit a form, and is that what the alert is for? Should the alert display a message depending on where the user clicked or the state of the page?<br/>
+Interviewer: No.<br/>
+Me: Ok, great. I&rsquo;ve got my laptop right here, I can do this in the console on a live webpage, maybe wikipedia.<br/>
+( I&rsquo;ve already got the wikipedia page for Dolphins open and I&rsquo;m pressing &lsquo;option&rsquo; + &lsquo;command&rsquo; + &lsquo;j&rsquo; )
+Interviewer: No. On paper. And with all the HTML for a webpage, with the header and body information.
+Me: Ok, ( a little deflated )</p>
+
+<p>So let&rsquo;s review how to add an event listeners in javascript and see if we can find some more depth here too. Read to the end for some bonus event listener things with React.js.</p>
+
+<h2>Adding event listeners</h2>
+
+<p>We need a few things in order to add an event listener. First, what do we want to attach the listener to? In vanilla javascript, we can user our <code>document.getElementBy...</code> functions to select a specific tag, class, name, or id. Second, we&rsquo;ll need to know what kind of event to listen to, ie. a &lsquo;click&rsquo;, &lsquo;submit&rsquo;, &lsquo;mouseover&rsquo;, or something else. There&rsquo;s a great list of all the events <a href="https://www.w3schools.com/jsref/dom_obj_event.asp">here</a>. Finally, we need a function. In the interview mentioned above, it was a simple alert message, however, we can do a lot here. We can even call named functions. Ok, the real last thing is whether we want our event propagation to capture or bubble, we&rsquo;ll get into that a bit later.</p>
+
+<p>Ok, we&rsquo;re ready to start coding this up.</p>
+
+<h2>It&rsquo;s console time</h2>
+
+<p>Let&rsquo;s add some listeners to the wikipedia page for <a href="https://en.wikipedia.org/wiki/Dolphin">Dolphins</a>, they&rsquo;re super smart animals and we should be listening to them.</p>
+
+<p>Open up the console and type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document.getElementById('mw-content-text').addEventListener('click', function(){alert('hi')})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now click any of the interesting dolphin information. Yay, we get an alert with our message.</p>
+
+<p>Note: if we try and remove the event listener with <code>document.getElementById('mw-content-text').removeEventListener('click', function(){alert('hi')})
+</code>, that won&rsquo;t work because the remove event listener method only works with named functions. Our alert function is an anonymous function. But don&rsquo;t worry! If you want to get rid of that event handler, you just need to refresh the page.</p>
+
+<h2>Who&rsquo;s up first: propagation</h2>
+
+<p>If we add the following listeners to our page, what do you think will happen when we click a paragraph?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document.getElementById('mw-content-text').addEventListener('click', function(){alert('hi')}, true)
+</span><span class='line'>document.getElementsByClassName('mw-body')[0].addEventListener('click', function(){alert('hello')}, true)
+</span><span class='line'>document.getElementById('mw-content-text').addEventListener('click', function(){alert('why, hello there')}, false)
+</span><span class='line'>document.getElementsByClassName('mw-body')[0].addEventListener('click', function(){alert('salutations')}, false)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When you click you&rsquo;ll see:
+1. &lsquo;hello&rsquo;
+2. &lsquo;hi&rsquo;
+3. &lsquo;why, hello there&rsquo;
+4. &lsquo;salutations&rsquo;</p>
+
+<p>The reason for this is that events  bubble by default, which means we start with the most deeply nested element&rsquo;s event, and go up the chain from there. When we set the capture variable to &lsquo;true&rsquo;, we instead start with the outermost DOM element and work our way down. We also see from this experiment that events that are captured take precedent over those that aren&rsquo;t. You can experiment by implementing these listeners in different orders, but the outcome will be the same.</p>
+
+<h2>Alternatives ( and why not to use them )</h2>
+
+<p>You can also do this inline in your HTML element with an &lsquo;onclick&rsquo; variable set to a function. This is not ideal as it could take your website longer to render, which would negatively impact the user experience.</p>
+
+<p>Alternatively, you can add an inline listener in javascript with:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document.getElementById('mw-content-text').onclick = function(){alert('this works!')}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, this will overwrite any other listeners written this way and this method doesn&rsquo;t allow you to control the propagation. Bonus question: if you add this to the dolphins page, what will the new order be?</p>
+
+<h2>We want to see the HTML</h2>
+
+<p>For closure, this is what a simple html page would look like if it just had a button that created an alert:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!doctype html&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>  &lt;head&gt;
+</span><span class='line'>    &lt;meta charset="utf-8"&gt;
+</span><span class='line'>    &lt;title&gt;Code Challenge&lt;/title&gt;
+</span><span class='line'>  &lt;/head&gt;
+</span><span class='line'>  &lt;body&gt;
+</span><span class='line'>    &lt;button type='btn' id='alert'&gt;Alert Button&lt;/button&gt;
+</span><span class='line'>  &lt;script&gt;
+</span><span class='line'>    document.getElementById('alert').addEventListener('click', function(event) { alert('hello') } )
+</span><span class='line'>  &lt;/script&gt;
+</span><span class='line'>  &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This was pretty basic, but there are much more fun code challenges out there. One I tried recently that was tricky and fun is this one from <a href="https://taco-spolsky.github.io/">Trello</a>. Have fun and happy coding.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://sammysteiner.github.io/blog/2017/07/14/listening-to-javascript-adding-events/</loc>
+<lastmod>2017-07-14T15:03:14-04:00</lastmod>
+</url>
+<url>
 <loc>http://sammysteiner.github.io/blog/2017/07/05/dynamic-forms-in-react-part-2/</loc>
 <lastmod>2017-07-05T11:14:22-04:00</lastmod>
 </url>
@@ -133,5 +137,14 @@
 </url>
 <url>
 <loc>http://sammysteiner.github.io/blog/categories/forms/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/addeventlistener/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/code/</loc>
+</url>
+<url>
+<loc>http://sammysteiner.github.io/blog/categories/challenge/</loc>
 </url>
 </urlset>
