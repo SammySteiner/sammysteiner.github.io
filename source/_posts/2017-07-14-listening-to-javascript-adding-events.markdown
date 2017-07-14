@@ -11,9 +11,13 @@ categories: Javascript addEventListener Code Challenge React
 This seems to keep coming up in code challenges so I wanted to write about it. Usually this is a piece of a larger challenge, but sometimes these questions are really basic. Sometimes these questions get weird, like in a totally real interview I had:
 
 Interviewer: I want a button to create an alert on the screen.
+
 Me: Ok. Does this button submit a form, and is that what the alert is for? Should the alert display a message depending on where the user clicked or the state of the page?
+
 Interviewer: No.
+
 Me: Ok, great. I've got my laptop right here, I can do this in the console on a live webpage, maybe wikipedia.
+
 ( I've already got the wikipedia page for Dolphins open and I'm pressing 'option' + 'command' + 'j' )
 Interviewer: No. On paper. And with all the HTML for a webpage, with the header and body information.
 Me: Ok, ( a little deflated )
