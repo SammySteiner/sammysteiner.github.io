@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Addeventlistener | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/addeventlistener/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-14T16:02:26-04:00</updated>
+  <updated>2017-07-14T16:05:19-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -26,7 +26,7 @@
 Me: Ok. Does this button submit a form, and is that what the alert is for? Should the alert display a message depending on where the user clicked or the state of the page?<br/>
 Interviewer: No.<br/>
 Me: Ok, great. I&rsquo;ve got my laptop right here, I can do this in the console on a live webpage, maybe wikipedia.<br/>
-( I&rsquo;ve already got the wikipedia page for Dolphins open and I&rsquo;m pressing &lsquo;option&rsquo; + &lsquo;command&rsquo; + &lsquo;j&rsquo; )
+( I&rsquo;ve already got the wikipedia page for Dolphins open and I&rsquo;m pressing &lsquo;option&rsquo; + &lsquo;command&rsquo; + &lsquo;j&rsquo; )<br/>
 Interviewer: No. On paper. And with all the HTML for a webpage, with the header and body information.
 Me: Ok, ( a little deflated )</p>
 
