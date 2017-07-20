@@ -50,4 +50,4 @@ Now you can operate on each collection element as if it were an element of this 
 
 A question that has come up a few times for me while working with vanilla javascript is when to work with an HTML collection as a collection vs. converting it to an array and working with it that way. I think this comes down to two considerations. First, is your goal to modify the DOM for some or all of the elements in the collection? If so, working with it as a collection seems more direct, and might be more efficient, though I haven't seen a difference in practice. Second, if what you need to do can be accomplished in a simple 'for loop', then great, no need to convert it to an array. Otherwise, converting it to an array will probably save more headaches than the line of code necessary to convert it.
 
-Good luck and happy coding!
+Good luck, hope this helps, and happy coding! 
