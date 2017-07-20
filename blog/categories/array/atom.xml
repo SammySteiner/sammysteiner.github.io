@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Array | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/array/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-14T16:05:19-04:00</updated>
+  <updated>2017-07-20T10:17:10-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How Can I Work With HTML Collections?]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/07/20/how-can-i-work-with-html-collections/"/>
+    <updated>2017-07-20T08:52:36-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/07/20/how-can-i-work-with-html-collections</id>
+    <content type="html"><![CDATA[<h2>What are HTML Collections?</h2>
+
+<p>In vanilla javascript, when selecting elements from the DOM, either through <code>document.getElementById</code>, <code>document.getElementsByClassName</code>, <code>document.getElementsByName</code>, <code>document.getElementsByTagName</code>, or <code>document.getElementsByTagNameNS</code> the return value is an HTML collection. This is important because even though it looks like an array, it does not have the same prototypical methods. Also, and more importantly they are live DOM objects, meaning that if you modify them, you are directly modifying the DOM.</p>
+
+<h2>What do we get for free?</h2>
+
+<p>First off, the ability to modify the DOM directly is very useful but also a great place for bugs to slip in, so be careful in how you use it.</p>
+
+<p>We also get access to one property and a several methods:
+1. HTML collections have a &lsquo;length&rsquo; property that can be called with <code>collection.length</code>, and it returns the number of elements in the collection.
+2. HTML collections have an &lsquo;item()&rsquo; method that can be called with <code>collection.item(index number of the item)</code>, and it returns the element at that index. If the index doesn&rsquo;t exist, it will return &lsquo;null&rsquo;.
+3. HTML collections have a &lsquo;namedItem()&rsquo; method that can be called with <code>collection.namedItem(id or name)</code>, and it returns the element in the collection with the corresponding &lsquo;id&rsquo; or if that doesn&rsquo;t find anything, with the corresponding &lsquo;name.&rsquo;</p>
+
+<h2>What don&rsquo;t we get for free?</h2>
+
+<p>An HTML collection is not an array, and that means we don&rsquo;t have all the great array methods like, &lsquo;forEach&rsquo;, &lsquo;map&rsquo;, &lsquo;filter&rsquo;, etc. So how do we iterate over the collection?</p>
+
+<p>First, you should know that there was something I didn&rsquo;t mention in the &lsquo;what do we get for free&rsquo; section, we can still use bracket notation to access elements in our collection! What&rsquo;s the difference between that an the item method? If you try an access an element with an index that doesn&rsquo;t exist, item() will return null and bracket notation will return undefined.</p>
+
+<p>With bracket notation, we can use a for loop:
+<code>
+for (var i = 0; i &lt; collection.length; i++) {
+  /* do something with collection[i] */
+}
+</code></p>
+
+<p>Alternatively, there is a way to convert a collection to an array, curtesy of <a href="https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array">harpo</a> on stackoverflow.</p>
+
+<p>with ECMAScript 5.1 and below:
+<code>
+var collectionArr = [].slice.call(collection)
+</code></p>
+
+<p>with ECMAScript 6 and above:
+<code>
+var collectionArr = Array.from(collection)
+</code></p>
+
+<p>Now you can operate on each collection element as if it were an element of this new array. You will still modify the DOM when you change these values.</p>
+
+<h2>Conclusion</h2>
+
+<p>A question that has come up a few times for me while working with vanilla javascript is when to work with an HTML collection as a collection vs. converting it to an array and working with it that way. I think this comes down to two considerations. First, is your goal to modify the DOM for some or all of the elements in the collection? If so, working with it as a collection seems more direct, and might be more efficient, though I haven&rsquo;t seen a difference in practice. Second, if what you need to do can be accomplished in a simple &lsquo;for loop&rsquo;, then great, no need to convert it to an array. Otherwise, converting it to an array will probably save more headaches than the line of code necessary to convert it.</p>
+
+<p>Good luck and happy coding!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What's Going on With Find, Map, and Collect in Ruby]]></title>
