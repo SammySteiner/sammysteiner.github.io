@@ -21,13 +21,33 @@ We also get access to one property and a several methods:
 
 ## What don't we get for free?
 
-array methods
-how to iterate?
-how to convert into an array
-difference between item and bracket notation (null vs. undefined)
+An HTML collection is not an array, and that means we don't have all the great array methods like, 'forEach', 'map', 'filter', etc. So how do we iterate over the collection?
+
+First, you should know that there was something I didn't mention in the 'what do we get for free' section, we can still use bracket notation to access elements in our collection! What's the difference between that an the item method? If you try an access an element with an index that doesn't exist, item() will return null and bracket notation will return undefined.
+
+With bracket notation, we can use a for loop:
+```
+for (var i = 0; i < collection.length; i++) {
+  /* do something with collection[i] */
+}
+```
+
+Alternatively, there is a way to convert a collection to an array, curtesy of [harpo](https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array) on stackoverflow.
+
+with ECMAScript 5.1 and below:
+```
+var collectionArr = [].slice.call(collection)
+```
+
+with ECMAScript 6 and above:
+```
+var collectionArr = Array.from(collection)
+```
+
+Now you can operate on each collection element as if it were an element of this new array. You will still modify the DOM when you change these values.
 
 ## Conclusion
 
-A question that has come up a few times for me while working with vanilla javascript is when to work with an HTML collection as a collection vs. converting it to an array and working with it that way. I think this comes down to two considerations. First, is your goal to modify the DOM for some or all of the elements in the collection? If so, working with it as a collection seems more direct. Second, if what you need to do can be accomplished in a simple 'for loop', then great, no need to convert it to an array. Otherwise, converting it to an array will probably save more headaches than the line of code necessary to convert it.
+A question that has come up a few times for me while working with vanilla javascript is when to work with an HTML collection as a collection vs. converting it to an array and working with it that way. I think this comes down to two considerations. First, is your goal to modify the DOM for some or all of the elements in the collection? If so, working with it as a collection seems more direct, and might be more efficient, though I haven't seen a difference in practice. Second, if what you need to do can be accomplished in a simple 'for loop', then great, no need to convert it to an array. Otherwise, converting it to an array will probably save more headaches than the line of code necessary to convert it.
 
 Good luck and happy coding!
