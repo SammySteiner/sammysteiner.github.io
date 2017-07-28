@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Algorithm | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/algorithm/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-20T10:54:41-04:00</updated>
+  <updated>2017-07-28T19:29:06-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Big O]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/07/28/the-big-o/"/>
+    <updated>2017-07-28T17:47:08-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/07/28/the-big-o</id>
+    <content type="html"><![CDATA[<h2>What is the O?</h2>
+
+<p>As a developer working with real world systems, it is not always enough to solve the problem. We need to solve the problem as efficiently as possible. That means reducing the cost of our calculations. In order to think about this, we need some vocabulary, so let&rsquo;s define our terms.</p>
+
+<p>Cost is being valued in the number of calculations the computer must do in a worst case scenario. This is another way of expressing <a href="https://en.wikipedia.org/wiki/Time_complexity">Time Complexity</a> in computer science. For example, if we have a function that looks at every letter of a string, the cost of the function is equal to the length of the string in the worst case, ie. where the function must go through the entire string before concluding.</p>
+
+<p>That cost in the worst case scenario is called the &ldquo;Big O&rdquo;. In the example above, the Big O is represented by O(n) where &lsquo;n&rsquo; is the length of the string.</p>
+
+<h2>How do we calculate it?</h2>
+
+<p>As the complexity of our inputs grow, how many more calculations does the computer have to go through to complete the function in the worst case scenario? That is what we&rsquo;re looking to calculate. When calculating this, we&rsquo;re only interested in the exponential growth, since linear or even geometric growth isn&rsquo;t going to have a large impact on performance.</p>
+
+<p>Mostly, we&rsquo;re looking for how many times our function will need to loop through our inputs, whether they are arrays, linked lists, hashes or antying else.</p>
+
+<p>Let&rsquo;s take a couple of simple functions and talk through the Big O.</p>
+
+<h2>What are some common examples?</h2>
+
+<p>Big O(n)</p>
+
+<pre><code>function simpleSearch(target, array)  {
+  for(var i = 0; i &lt; array.length; i++) {
+    if(target === array[i]){
+      return i
+    }
+  }
+}
+</code></pre>
+
+<p>In the example above, in the worst case scenario our target is the last element in the array. If that were the case, our simpleSearch function would have to go through the entire array one time in order to complete its task. Because of that, the number of potential computations grows proportionally with the length of the array. Hence the Big O is &lsquo;n&rsquo;.</p>
+
+<p>Big O(n<sup>2</sup>)</p>
+
+<pre><code>function sumSearch(target, array)  {
+  var sums = []
+  for(var i = 0; i &lt; array.length; i++) {
+    for(var j = 0; j &lt; array.length; j++) {
+      if(i + j === target){
+        sums.push([i, j])
+      }
+    }
+  }
+  return sums
+}
+</code></pre>
+
+<p>In the example above, our function needs to go through the entire array every time is called. For each number in the array, it then needs to check each number in the array to see if the add up to the target. That nested loop within our loop means that the growth of the calculations necessary to complete the function grow at a rate of &lsquo;n&rsquo; * &lsquo;n&rsquo; with the growth of the length of the array.</p>
+
+<p>Let&rsquo;s end with another popular one, a binary search. Keep in mind that one requirement for a binary search is that the array is already sorted.</p>
+
+<p>Big O(log(n))</p>
+
+<pre><code>function binarySearch(target, array){
+  var min = 0
+  var max = array.length - 1
+  while( min &lt;= max ){
+    var guess = Math.floor( (min + max) / 2)
+    if(target === array[guess]){
+      return guess
+    } else if( array[guess] &lt; target ) {
+      min = guess + 1
+    } else if( array[guess] &gt; target ){
+      max = guess - 1
+    }
+  }
+}
+</code></pre>
+
+<p>In this example, we&rsquo;re cutting the length of the array in half every time we check the value. So if we have an array with 10 elements, we&rsquo;re only looking up 4 elements in the worst case scenario. Which means that we&rsquo;re performing less calculations than the total number elements in the array. That&rsquo;s pretty cool!</p>
+
+<h2>Conclusion</h2>
+
+<p>There are lots of ways to solve a problem with code and they are not all equal. After solving the problem you&rsquo;re working on, spend the time working out the Big O of the method and see if you can come up with something better.</p>
+
+<p>Good luck and happy coding!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building a Game: Generate Unique and Random X and Y Coordinates]]></title>

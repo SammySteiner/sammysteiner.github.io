@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Javascript | Creative Coding]]></title>
   <link href="http://sammysteiner.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://sammysteiner.github.io/"/>
-  <updated>2017-07-20T10:54:41-04:00</updated>
+  <updated>2017-07-28T19:29:06-04:00</updated>
   <id>http://sammysteiner.github.io/</id>
   <author>
     <name><![CDATA[Sammy Steiner]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Big O]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/07/28/the-big-o/"/>
+    <updated>2017-07-28T17:47:08-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/07/28/the-big-o</id>
+    <content type="html"><![CDATA[<h2>What is the O?</h2>
+
+<p>As a developer working with real world systems, it is not always enough to solve the problem. We need to solve the problem as efficiently as possible. That means reducing the cost of our calculations. In order to think about this, we need some vocabulary, so let&rsquo;s define our terms.</p>
+
+<p>Cost is being valued in the number of calculations the computer must do in a worst case scenario. This is another way of expressing <a href="https://en.wikipedia.org/wiki/Time_complexity">Time Complexity</a> in computer science. For example, if we have a function that looks at every letter of a string, the cost of the function is equal to the length of the string in the worst case, ie. where the function must go through the entire string before concluding.</p>
+
+<p>That cost in the worst case scenario is called the &ldquo;Big O&rdquo;. In the example above, the Big O is represented by O(n) where &lsquo;n&rsquo; is the length of the string.</p>
+
+<h2>How do we calculate it?</h2>
+
+<p>As the complexity of our inputs grow, how many more calculations does the computer have to go through to complete the function in the worst case scenario? That is what we&rsquo;re looking to calculate. When calculating this, we&rsquo;re only interested in the exponential growth, since linear or even geometric growth isn&rsquo;t going to have a large impact on performance.</p>
+
+<p>Mostly, we&rsquo;re looking for how many times our function will need to loop through our inputs, whether they are arrays, linked lists, hashes or antying else.</p>
+
+<p>Let&rsquo;s take a couple of simple functions and talk through the Big O.</p>
+
+<h2>What are some common examples?</h2>
+
+<p>Big O(n)</p>
+
+<pre><code>function simpleSearch(target, array)  {
+  for(var i = 0; i &lt; array.length; i++) {
+    if(target === array[i]){
+      return i
+    }
+  }
+}
+</code></pre>
+
+<p>In the example above, in the worst case scenario our target is the last element in the array. If that were the case, our simpleSearch function would have to go through the entire array one time in order to complete its task. Because of that, the number of potential computations grows proportionally with the length of the array. Hence the Big O is &lsquo;n&rsquo;.</p>
+
+<p>Big O(n<sup>2</sup>)</p>
+
+<pre><code>function sumSearch(target, array)  {
+  var sums = []
+  for(var i = 0; i &lt; array.length; i++) {
+    for(var j = 0; j &lt; array.length; j++) {
+      if(i + j === target){
+        sums.push([i, j])
+      }
+    }
+  }
+  return sums
+}
+</code></pre>
+
+<p>In the example above, our function needs to go through the entire array every time is called. For each number in the array, it then needs to check each number in the array to see if the add up to the target. That nested loop within our loop means that the growth of the calculations necessary to complete the function grow at a rate of &lsquo;n&rsquo; * &lsquo;n&rsquo; with the growth of the length of the array.</p>
+
+<p>Let&rsquo;s end with another popular one, a binary search. Keep in mind that one requirement for a binary search is that the array is already sorted.</p>
+
+<p>Big O(log(n))</p>
+
+<pre><code>function binarySearch(target, array){
+  var min = 0
+  var max = array.length - 1
+  while( min &lt;= max ){
+    var guess = Math.floor( (min + max) / 2)
+    if(target === array[guess]){
+      return guess
+    } else if( array[guess] &lt; target ) {
+      min = guess + 1
+    } else if( array[guess] &gt; target ){
+      max = guess - 1
+    }
+  }
+}
+</code></pre>
+
+<p>In this example, we&rsquo;re cutting the length of the array in half every time we check the value. So if we have an array with 10 elements, we&rsquo;re only looking up 4 elements in the worst case scenario. Which means that we&rsquo;re performing less calculations than the total number elements in the array. That&rsquo;s pretty cool!</p>
+
+<h2>Conclusion</h2>
+
+<p>There are lots of ways to solve a problem with code and they are not all equal. After solving the problem you&rsquo;re working on, spend the time working out the Big O of the method and see if you can come up with something better.</p>
+
+<p>Good luck and happy coding!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How Can I Work With HTML Collections?]]></title>
@@ -360,141 +443,6 @@ handleChange(e){
 <h2>Conclusion</h2>
 
 <p>This is a lot to wrap your head around, controlled inputs, preventing a lot of default actions, completely sidestepping the DOM! I know, it&rsquo;s a lot. But it&rsquo;s about to get crazier. In part two, we&rsquo;ll discuss how to give the user the ability to dynamically add inputs in this controlled system. Stay tuned for <a href="https://sammysteiner.github.io/blog/2017/07/05/dynamic-forms-in-react-part-2/">Part II</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Create a Quick TDD Environment for Javascript]]></title>
-    <link href="http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript/"/>
-    <updated>2017-04-30T20:32:44-04:00</updated>
-    <id>http://sammysteiner.github.io/blog/2017/04/30/create-a-quick-tdd-enironment-for-javascript</id>
-    <content type="html"><![CDATA[<h2>Getting started</h2>
-
-<p>Our goal is to get a project up and running quickly. If you haven&rsquo;t done this before, first we want to create a project directory, create a github repository, and then link the two. Here are the basic steps:</p>
-
-<ol>
-<li>Navigate to your development folder in Terminal.</li>
-<li>Type <code>mkdir "project-name"</code> in terminal to create a project folder.</li>
-<li>Type <code>cd "project-name"</code> in Terminal to navigate into your project directory.</li>
-<li>Type <code>git init</code> in Terminal to set up your directory as a git repository.</li>
-<li>Create a readme file by typing <code>touch README.md</code> in Terminal.</li>
-<li>Add and commit your new repository by typing <code>git add .</code> and  <code>git commit -m "first commit"</code>.</li>
-<li>To create a github repository, login to <a href="https://github.com">github</a> in your browser and navigate to <a href="https://github.com/new">github/new</a> to create a new repository.</li>
-<li>Once there, give your repository a name, use the same one as your project directory, and leave the &ldquo;Initialize this repository with a README&rdquo; option unchecked.</li>
-<li>Click &ldquo;Create Repository&rdquo;.</li>
-<li>Back in Terminal, type <code>git remote add origin git@github.com:your-git-username/your-repository-name.git</code> to set up the connection between the folder on your computer, and the repository in github.</li>
-<li>Then type <code>git push -u origin master</code> to push the files, ie. your readme, from your project folder to github.</li>
-</ol>
-
-
-<p>Now that your project is up and running, it&rsquo;s time to create a testing environment.</p>
-
-<h2>Jasmine versus Mocha</h2>
-
-<p>There are two very popular testing libraries for Javascript, Jasmine and Mocha. Both are great, and weighing the pros and cons of each is enough for another blog post. Some people have already written great articles on the topic here:</p>
-
-<ol>
-<li><a href="http://www.techtalkdc.com/which-javascript-test-library-should-you-use-qunit-vs-jasmine-vs-mocha/">Kevin Groat</a></li>
-<li><a href="https://marcofranssen.nl/jasmine-vs-mocha/">Marco Franssen</a></li>
-</ol>
-
-
-<p>I&rsquo;m more familiar with Mocha, so we&rsquo;re going to go with that.</p>
-
-<h2>Setting up Mocha</h2>
-
-<p>First we need to create our NPM dependencies, with a package.json file. There is a great walkthrough built in for us by typing <code>npm init</code> in Terminal. Just follow the promts and include a name, repo, and some other metadata in the form. That will create a package.json file in your project folder. Don&rsquo;t forget to add/commit your changes frequently.</p>
-
-<p>Create a mocha dependency in your project package.json file by typing <code>npm install --save mocha</code> in Terminal. Create a test file with <code>atom test/test.js</code>. I&rsquo;m using Atom, but you can replace that with your editor of choice.</p>
-
-<p>This is where it can get pretty hairy. There is a lot to install to get up and running. I would advise starting off with a simple test and some simple code just to have something to test against. We also need to require the files with our code and assign it to a variable, as well as require any other mocha assertion libraries you want to use. My basic test.js setup looks like this:</p>
-
-<p>In test.js:
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">var</span> <span class="n">expect</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">expect</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span>
-</span><span class='line'><span class="n">var</span> <span class="n">myCode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">js</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;describe (&amp;lsquo;test&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">  it(&amp;lsquo;returns &amp;ldquo;Hello, world!&amp;rdquo; as a string&amp;rsquo;, function() {</span>
-</span><span class='line'><span class="sr">    expect(myCode.test()).to.be(&amp;ldquo;Hello, world!&amp;rdquo;)</span>
-</span><span class='line'><span class="sr">  })</span>
-</span><span class='line'><span class="sr">})&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h2</span><span class="o">&gt;</span><span class="no">All</span> <span class="n">other</span> <span class="n">tests</span> <span class="n">below</span><span class="o">&lt;</span><span class="sr">/h2&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;</span>
-</span><span class='line'><span class="sr">In terminal: `npm install --save expect.js`</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">Now we&#39;re ready to start writing our functions. If you want to build out this application, you can move all your inclusions and exporting responsibilities to a root.js file in your test folder. That will allow you to write your functions normally and branch out to other .js files without things getting to messy. But more on that in another blog.</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">to pass our first test, add the following code to index.js:</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;var test = function() {</span>
-</span><span class='line'><span class="sr">  return &amp;ldquo;Hello, world!&amp;rdquo;</span>
-</span><span class='line'><span class="sr">}</span>
-</span></code></pre></td></tr></table></div></figure></p>
-
-<p>But we&rsquo;re still not passing our test yet. With mocha, it&rsquo;s not enough to just include it in the test.js file, we need to export them from our index.js file as well. We do this with some general code at the bottom of our file that we update with each additional function. Here&rsquo;s what we need at the bottom of index.js to export our first test:</p>
-
-<pre><code class="ruby">if(typeof exports !== 'undefined') {
-    exports.test = test
-}
-</code></pre>
-
-<p>Now you should be passing your first test. Hurray! Now that you&rsquo;re up and running. The <a href="https://mochajs.org">mocha documentation</a> on how to write more complex tests is a great resource.</p>
-
-<h2>Bonus</h2>
-
-<p>You don&rsquo;t need to export every function in your index.js file. You only need to export the functions that your tests will call on. So if you have a function called <code>testTwo</code> that should accept two arguments, multiply them, and return the result, you can export it in your exports like <code>exports.testTwo = testTwo</code>. However, if that function just returns a helper function, called <code>multiplier(num1, num2)</code>, you would not need to export that function as well.</p>
-
-<p>Here&rsquo;s what this test looks like in test.js:
-<code>ruby
-describe ('test2', function() {
-  it('multiplies two numbers together', function() {
-    expect(myCode.testTwo(3, 5)).to.be(15)
-  })
-})
-</code></p>
-
-<p>And here is how you would pass it in index.js. Note that you do not need to export <code>multiplier</code>.</p>
-
-<pre><code class="ruby">var testTwo = function(num1, num2) {
-  return mulitplier(num1, num2)
-}
-
-var mulitplier = function(a, b) {
-  return a * b
-}
-
-if(typeof exports !== 'undefined') {
-    exports.test = test;
-    exports.testTwo = testTwo
-}
-</code></pre>
-
-<p>Special thanks to <a href="https://github.com/jjseymour">JJ</a> for guiding me through this process!</p>
 ]]></content>
   </entry>
   

@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Big O - Creative Coding</title>
+  <meta name="author" content="Sammy Steiner">
+
+  
+  <meta name="description" content="What is the O? As a developer working with real world systems, it is not always enough to solve the problem. We need to solve the problem as &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/07/28/the-big-o">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
+  
+    <h2>A Creative Writer's Guide to Code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">The Big O</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-07-28T17:47:08-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:47 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>What is the O?</h2>
+
+<p>As a developer working with real world systems, it is not always enough to solve the problem. We need to solve the problem as efficiently as possible. That means reducing the cost of our calculations. In order to think about this, we need some vocabulary, so let&rsquo;s define our terms.</p>
+
+<p>Cost is being valued in the number of calculations the computer must do in a worst case scenario. This is another way of expressing <a href="https://en.wikipedia.org/wiki/Time_complexity">Time Complexity</a> in computer science. For example, if we have a function that looks at every letter of a string, the cost of the function is equal to the length of the string in the worst case, ie. where the function must go through the entire string before concluding.</p>
+
+<p>That cost in the worst case scenario is called the &ldquo;Big O&rdquo;. In the example above, the Big O is represented by O(n) where &lsquo;n&rsquo; is the length of the string.</p>
+
+<h2>How do we calculate it?</h2>
+
+<p>As the complexity of our inputs grow, how many more calculations does the computer have to go through to complete the function in the worst case scenario? That is what we&rsquo;re looking to calculate. When calculating this, we&rsquo;re only interested in the exponential growth, since linear or even geometric growth isn&rsquo;t going to have a large impact on performance.</p>
+
+<p>Mostly, we&rsquo;re looking for how many times our function will need to loop through our inputs, whether they are arrays, linked lists, hashes or antying else.</p>
+
+<p>Let&rsquo;s take a couple of simple functions and talk through the Big O.</p>
+
+<h2>What are some common examples?</h2>
+
+<p>Big O(n)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function simpleSearch(target, array)  {
+</span><span class='line'>  for(var i = 0; i &lt; array.length; i++) {
+</span><span class='line'>    if(target === array[i]){
+</span><span class='line'>      return i
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the example above, in the worst case scenario our target is the last element in the array. If that were the case, our simpleSearch function would have to go through the entire array one time in order to complete its task. Because of that, the number of potential computations grows proportionally with the length of the array. Hence the Big O is &lsquo;n&rsquo;.</p>
+
+<p>Big O(n<sup>2</sup>)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function sumSearch(target, array)  {
+</span><span class='line'>  var sums = []
+</span><span class='line'>  for(var i = 0; i &lt; array.length; i++) {
+</span><span class='line'>    for(var j = 0; j &lt; array.length; j++) {
+</span><span class='line'>      if(i + j === target){
+</span><span class='line'>        sums.push([i, j])
+</span><span class='line'>      }
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>  return sums
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the example above, our function needs to go through the entire array every time is called. For each number in the array, it then needs to check each number in the array to see if the add up to the target. That nested loop within our loop means that the growth of the calculations necessary to complete the function grow at a rate of &lsquo;n&rsquo; * &lsquo;n&rsquo; with the growth of the length of the array.</p>
+
+<p>Let&rsquo;s end with another popular one, a binary search. Keep in mind that one requirement for a binary search is that the array is already sorted.</p>
+
+<p>Big O(log(n))</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function binarySearch(target, array){
+</span><span class='line'>  var min = 0
+</span><span class='line'>  var max = array.length - 1
+</span><span class='line'>  while( min &lt;= max ){
+</span><span class='line'>    var guess = Math.floor( (min + max) / 2)
+</span><span class='line'>    if(target === array[guess]){
+</span><span class='line'>      return guess
+</span><span class='line'>    } else if( array[guess] &lt; target ) {
+</span><span class='line'>      min = guess + 1
+</span><span class='line'>    } else if( array[guess] &gt; target ){
+</span><span class='line'>      max = guess - 1
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, we&rsquo;re cutting the length of the array in half every time we check the value. So if we have an array with 10 elements, we&rsquo;re only looking up 4 elements in the worst case scenario. Which means that we&rsquo;re performing less calculations than the total number elements in the array. That&rsquo;s pretty cool!</p>
+
+<h2>Conclusion</h2>
+
+<p>There are lots of ways to solve a problem with code and they are not all equal. After solving the problem you&rsquo;re working on, spend the time working out the Big O of the method and see if you can come up with something better.</p>
+
+<p>Good luck and happy coding!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Sammy Steiner
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-07-28T17:47:08-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>5:47 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>, <a class='category' href='/blog/categories/computer/'>computer</a>, <a class='category' href='/blog/categories/efficiency/'>efficiency</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/science/'>science</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/07/28/the-big-o/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/07/28/the-big-o/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/07/20/how-can-i-work-with-html-collections/" title="Previous Post: How Can I Work With HTML Collections?">&laquo; How Can I Work With HTML Collections?</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
