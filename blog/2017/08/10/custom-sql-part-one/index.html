@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Custom SQL: Part One - Creative Coding</title>
+  <meta name="author" content="Sammy Steiner">
+
+  
+  <meta name="description" content="Introduction Writing custom SQL queries is not something I have to do often, especially when most my database querying can be easily written with &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://sammysteiner.github.io/blog/2017/08/10/custom-sql-part-one">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Creative Coding" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+<!--- MathJax Configuration -->
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Creative Coding</a></h1>
+  
+    <h2>A Creative Writer's Guide to Code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscribe" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS" target="_blank"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25" viewbox="0 0 100 100"><path class="social" d="M 13.310204,73.332654 C 5.967347,73.332654 0,79.322448 0,86.621428 c 0,7.338776 5.967347,13.262246 13.310204,13.262246 7.370408,0 13.328572,-5.92245 13.328572,-13.262246 0,-7.29898 -5.958164,-13.288774 -13.328572,-13.288774 z M 0.01530612,33.978572 V 53.143878 C 12.493878,53.143878 24.229592,58.02347 33.068368,66.865306 41.894898,75.685714 46.767346,87.47449 46.767346,100 h 19.25 C 66.017346,63.592858 36.4,33.979592 0.01530612,33.978572 l 0,0 z M 0.03877552,0 V 19.17449 C 44.54796,19.17551 80.77551,55.437756 80.77551,100 H 100 C 100,44.87653 55.15102,0 0.03877552,0 z"></path></svg></a></li>
+  
+</ul>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+      <form action="https://www.google.com/search" method="get">
+        <fieldset role="search">
+          <input type="hidden" name="sitesearch" value="sammysteiner.github.io" />
+    
+          <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+        </fieldset>
+      </form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Custom SQL: Part One</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-08-10T18:30:06-04:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>6:30 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Introduction</h2>
+
+<p>Writing custom SQL queries is not something I have to do often, especially when most my database querying can be easily written with Rail’s Active Record library. However, every now and then, whether for performance or just utility, I need to write some custom SQL. Since those times are few and far in-between, I’m going to write a helpful four-part series with the basics: setting up tables, simple queries, aggregate functions, and joining tables. Here we go!</p>
+
+<h2>Database Table Basics</h2>
+
+<p>A database table looks very similar to an excel spreadsheet. You have rows and columns. Columns contain information about your entries and rows contain each individual entry. Each row should start with a unique ID that we use to identify the entry, called the Primary Key. The primary key is always an integer. There are many other data types available to us, aside from integers, some basic ones are: text, booleans, and dates.</p>
+
+<h2>Creating a table</h2>
+
+<p>If I wanted to create a table for all the pets my friends and I have, we’d want to have a couple tables. First and owners table that would just have an id, and a name for each person. Second we’d want to have a pets table with the name, age, adoption_date, and friendly columns. Here’s the SQL to create those tables:</p>
+
+<p>The owner’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">owners</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">name</span> <span class="nb">TEXT</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The pet’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">pets</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">name</span> <span class="nb">TEXT</span><span class="p">,</span>
+</span><span class='line'><span class="n">age</span> <span class="nb">INTEGER</span><span class="p">,</span>
+</span><span class='line'><span class="n">adoption_date</span> <span class="nb">DATE</span><span class="p">,</span>
+</span><span class='line'><span class="n">friendly</span> <span class="nb">BOOLEAN</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quick thing to notice is that each command in SQL is concluded with a semi-colon. Let’s add some pets and owners:</p>
+
+<p>The owner’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">owners</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Sammy&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sally&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sarah&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The pet&rsquo;s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">pets</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">adoption_date</span><span class="p">,</span> <span class="n">friendly</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Spot&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Scruffy&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2012</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Slappy&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you’ll notice we haven’t stored any indication of who owns which pet. I could edit pets table to include an owners column like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">pets</span> <span class="k">ADD</span> <span class="n">owner_id</span> <span class="nb">INTEGER</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, what happens when I want to share a pet with Sally? We can’t have an array of owner ids in the owners column on the pets table. The solution is to create a new table that stores those relationships. Each entry will represent a pet to owner relationship with a primary key, a owner_id column, and a pet_id column. That means that if Sally and I share a pet, there will be an entry for her relationship with the pet and an entry with my relationship with the pet. This is called a join table.</p>
+
+<p>Join table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">owners_pets</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">owner_id</span> <span class="nb">INTEGER</span><span class="p">,</span>
+</span><span class='line'><span class="n">pet_id</span> <span class="nb">INTEGER</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let’s add some relationships:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">owners_pets</span> <span class="p">(</span><span class="n">owner_id</span><span class="p">,</span> <span class="n">pet_id</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>We’ve built three tables and populated them with some info, all in bespoke, handwritten SQL! Great job. Our next post will deal with querying those tables to get back some information.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+  <span class="byline author vcard">Authored by <span class="fn">
+  
+    Sammy Steiner
+  
+  </span></span>
+
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-08-10T18:30:06-04:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>6:30 pm</span></time>
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/alter/'>alter</a>, <a class='category' href='/blog/categories/basics/'>basics</a>, <a class='category' href='/blog/categories/column/'>column</a>, <a class='category' href='/blog/categories/create/'>create</a>, <a class='category' href='/blog/categories/fundamentals/'>fundamentals</a>, <a class='category' href='/blog/categories/insert/'>insert</a>, <a class='category' href='/blog/categories/sql/'>sql</a>, <a class='category' href='/blog/categories/table/'>table</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://sammysteiner.github.io/blog/2017/08/10/custom-sql-part-one/" data-via="" data-counturl="http://sammysteiner.github.io/blog/2017/08/10/custom-sql-part-one/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/07/28/the-big-o/" title="Previous Post: The Big O">&laquo; The Big O</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Sammy Steiner -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

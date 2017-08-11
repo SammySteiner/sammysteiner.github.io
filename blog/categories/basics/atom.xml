@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Basics | Creative Coding]]></title>
+  <link href="http://sammysteiner.github.io/blog/categories/basics/atom.xml" rel="self"/>
+  <link href="http://sammysteiner.github.io/"/>
+  <updated>2017-08-11T17:31:19-04:00</updated>
+  <id>http://sammysteiner.github.io/</id>
+  <author>
+    <name><![CDATA[Sammy Steiner]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Custom SQL: Part One]]></title>
+    <link href="http://sammysteiner.github.io/blog/2017/08/10/custom-sql-part-one/"/>
+    <updated>2017-08-10T18:30:06-04:00</updated>
+    <id>http://sammysteiner.github.io/blog/2017/08/10/custom-sql-part-one</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>Writing custom SQL queries is not something I have to do often, especially when most my database querying can be easily written with Rail’s Active Record library. However, every now and then, whether for performance or just utility, I need to write some custom SQL. Since those times are few and far in-between, I’m going to write a helpful four-part series with the basics: setting up tables, simple queries, aggregate functions, and joining tables. Here we go!</p>
+
+<h2>Database Table Basics</h2>
+
+<p>A database table looks very similar to an excel spreadsheet. You have rows and columns. Columns contain information about your entries and rows contain each individual entry. Each row should start with a unique ID that we use to identify the entry, called the Primary Key. The primary key is always an integer. There are many other data types available to us, aside from integers, some basic ones are: text, booleans, and dates.</p>
+
+<h2>Creating a table</h2>
+
+<p>If I wanted to create a table for all the pets my friends and I have, we’d want to have a couple tables. First and owners table that would just have an id, and a name for each person. Second we’d want to have a pets table with the name, age, adoption_date, and friendly columns. Here’s the SQL to create those tables:</p>
+
+<p>The owner’s table:
+<code>SQL
+CREATE TABLE owners (
+id INTEGER PRIMARY KEY,
+name TEXT
+);
+</code></p>
+
+<p>The pet’s table:
+<code>SQL
+CREATE TABLE pets (
+id INTEGER PRIMARY KEY,
+name TEXT,
+age INTEGER,
+adoption_date DATE,
+friendly BOOLEAN
+);
+</code></p>
+
+<p>Quick thing to notice is that each command in SQL is concluded with a semi-colon. Let’s add some pets and owners:</p>
+
+<p>The owner’s table:
+<code>SQL
+INSERT INTO owners (name) VALUES ('Sammy'), ('Sally'), ('Sarah');
+</code></p>
+
+<p>The pet&rsquo;s table:
+<code>SQL
+INSERT INTO pets (name, age, adoption_date, friendly) VALUES ('Spot', 3, 2015-01-15, 'true'), ('Scruffy', 7, 2012-06-01, 'true'), ('Slappy', 2, 2017-01-01, 'false');
+</code></p>
+
+<p>Now you’ll notice we haven’t stored any indication of who owns which pet. I could edit pets table to include an owners column like this:
+<code>SQL
+ALTER TABLE pets ADD owner_id INTEGER
+</code></p>
+
+<p>However, what happens when I want to share a pet with Sally? We can’t have an array of owner ids in the owners column on the pets table. The solution is to create a new table that stores those relationships. Each entry will represent a pet to owner relationship with a primary key, a owner_id column, and a pet_id column. That means that if Sally and I share a pet, there will be an entry for her relationship with the pet and an entry with my relationship with the pet. This is called a join table.</p>
+
+<p>Join table:
+<code>SQL
+CREATE TABLE owners_pets (
+id INTEGER PRIMARY KEY,
+owner_id INTEGER,
+pet_id INTEGER
+);
+</code></p>
+
+<p>Now let’s add some relationships:
+<code>SQL
+INSERT INTO owners_pets (owner_id, pet_id) VALUES (1, 1)(2, 1)(2, 2)(3, 3);
+</code></p>
+
+<h2>Conclusion</h2>
+
+<p>We’ve built three tables and populated them with some info, all in bespoke, handwritten SQL! Great job. Our next post will deal with querying those tables to get back some information.</p>
+]]></content>
+  </entry>
+  
+</feed>

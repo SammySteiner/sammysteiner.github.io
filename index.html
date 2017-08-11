@@ -9,7 +9,7 @@
   <meta name="author" content="Sammy Steiner">
 
   
-  <meta name="description" content="What is the O? As a developer working with real world systems, it is not always enough to solve the problem. We need to solve the problem as &hellip;">
+  <meta name="description" content="Introduction Writing custom SQL queries is not something I have to do often, especially when most my database querying can be easily written with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/08/10/custom-sql-part-one/">Custom SQL: Part One</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-08-10T18:30:06-04:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>6:30 pm</span></time>
+        
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Introduction</h2>
+
+<p>Writing custom SQL queries is not something I have to do often, especially when most my database querying can be easily written with Rail’s Active Record library. However, every now and then, whether for performance or just utility, I need to write some custom SQL. Since those times are few and far in-between, I’m going to write a helpful four-part series with the basics: setting up tables, simple queries, aggregate functions, and joining tables. Here we go!</p>
+
+<h2>Database Table Basics</h2>
+
+<p>A database table looks very similar to an excel spreadsheet. You have rows and columns. Columns contain information about your entries and rows contain each individual entry. Each row should start with a unique ID that we use to identify the entry, called the Primary Key. The primary key is always an integer. There are many other data types available to us, aside from integers, some basic ones are: text, booleans, and dates.</p>
+
+<h2>Creating a table</h2>
+
+<p>If I wanted to create a table for all the pets my friends and I have, we’d want to have a couple tables. First and owners table that would just have an id, and a name for each person. Second we’d want to have a pets table with the name, age, adoption_date, and friendly columns. Here’s the SQL to create those tables:</p>
+
+<p>The owner’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">owners</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">name</span> <span class="nb">TEXT</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The pet’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">pets</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">name</span> <span class="nb">TEXT</span><span class="p">,</span>
+</span><span class='line'><span class="n">age</span> <span class="nb">INTEGER</span><span class="p">,</span>
+</span><span class='line'><span class="n">adoption_date</span> <span class="nb">DATE</span><span class="p">,</span>
+</span><span class='line'><span class="n">friendly</span> <span class="nb">BOOLEAN</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Quick thing to notice is that each command in SQL is concluded with a semi-colon. Let’s add some pets and owners:</p>
+
+<p>The owner’s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">owners</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Sammy&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sally&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sarah&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The pet&rsquo;s table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">pets</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">adoption_date</span><span class="p">,</span> <span class="n">friendly</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;Spot&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Scruffy&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2012</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Slappy&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2017</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you’ll notice we haven’t stored any indication of who owns which pet. I could edit pets table to include an owners column like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">pets</span> <span class="k">ADD</span> <span class="n">owner_id</span> <span class="nb">INTEGER</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>However, what happens when I want to share a pet with Sally? We can’t have an array of owner ids in the owners column on the pets table. The solution is to create a new table that stores those relationships. Each entry will represent a pet to owner relationship with a primary key, a owner_id column, and a pet_id column. That means that if Sally and I share a pet, there will be an entry for her relationship with the pet and an entry with my relationship with the pet. This is called a join table.</p>
+
+<p>Join table:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">owners_pets</span> <span class="p">(</span>
+</span><span class='line'><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'><span class="n">owner_id</span> <span class="nb">INTEGER</span><span class="p">,</span>
+</span><span class='line'><span class="n">pet_id</span> <span class="nb">INTEGER</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let’s add some relationships:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">owners_pets</span> <span class="p">(</span><span class="n">owner_id</span><span class="p">,</span> <span class="n">pet_id</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>We’ve built three tables and populated them with some info, all in bespoke, handwritten SQL! Great job. Our next post will deal with querying those tables to get back some information.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1686,209 +1809,6 @@ When we call this method with a grid size of four and three monsters, we get the
 <h2>Showtime!</h2>
 
 <p><img src="/assets/wifinder_animation.gif" alt="WiFinder gif" /></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2017/03/21/whats-going-on-with-each-map-and-collect-in-ruby/">What's Going on With Find, Map, and Collect in Ruby</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-03-21T16:21:57-04:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>4:21 pm</span></time>
-        
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>When should we use each vs. map or hash on Ruby Arrays?</h2>
-
-<p>If you&rsquo;re like me, you&rsquo;ve done some weird things with the <em>each</em> method in Ruby arrays. One thing I used to do was create a new array in my method, iterate over the array passed in to the method as an argument and shovel the return value into my new array. That is a useful code smell to look out for when refactoring. But that is unnecessary since we have the <em>map</em> and <em>collect</em> methods! I didn&rsquo;t understand how to use those methods, when to use them instead of <em>each</em>, and what they would return.</p>
-
-<p>FYI for the rest of the post, I&rsquo;m going to use &ldquo;<em>map</em>&rdquo; instead of <em>map</em> and <em>collect</em> because <em>map</em> and <em>collect</em> are identical. That is, they do the exact same thing. The only difference is that &ldquo;map&rdquo; is 3 characters to type but &ldquo;collect&rdquo; is more descriptive as to what’s going. You can think of it like we&rsquo;re collecting our new array elements and returning that collection as an array.</p>
-
-<p>If you&rsquo;re trying to do all that with <em>each</em> but adding on some <em>if</em> statements to determine what you&rsquo;re shoveling, you should look at some other methods like <em>find</em>, <em>select</em>, and many others!</p>
-
-<h2>Yield is awesome!</h2>
-
-<p>First, lets talk about what these iterator methods are doing. In order to dig into that, we need to discuss the <em>yield</em> keyword. <em>Yield</em> is a way to pass a block of code into an method with the arguments. For example, to demonstrate how <em>yield</em> interrupts a method to call on a separate block:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">interrupt_this_method</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;thing one&quot;</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="k">yield</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;thing two&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">interrupt_this_method</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">#=&gt;</span>
-</span><span class='line'><span class="err">‘</span><span class="n">thing</span> <span class="n">one</span><span class="err">’</span>
-</span><span class='line'><span class="mi">6</span>
-</span><span class='line'><span class="err">‘</span><span class="n">thing</span> <span class="n">two</span><span class="err">’</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The <em>yield</em> stops the method from putting the second statement until it has a chance to call whatever argument we passed into the method with the arguments in the block on the argument we pass into <em>yield</em>. We can use <em>yield</em> with a looping method like <em>while</em> to emulate our <em>each</em> and <em>map</em> methods to get under the hood.</p>
-
-<h2>What is going on with Each?</h2>
-
-<p>Now we’ll write our own <em>each</em> method, without using “<em>each</em>.” Aside from giving us some insight into what’s actually happening with our <em>each</em> method, it will show us how much time our higher level methods are saving us.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">generic_each_array_method_with_iterator</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>  <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>    <span class="k">yield</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
-</span><span class='line'>        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="n">array</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So far, we have a generic method that takes an array as an argument, as well as a block of code, sets the variable i to 0 and operates our code on each element of our array, adding 1 to the i variable, between each iteration, and stopping the <em>yield</em> when we’ve hit all the elements. We then return the original array that was passed in. We can use this to pass any block into our method with any array. Let’s give it a try:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">generic_each_array_method_with_iterator</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">num</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-</span><span class='line'><span class="c1">#=&gt;</span>
-</span><span class='line'><span class="mi">2</span>
-</span><span class='line'><span class="mi">4</span>
-</span><span class='line'><span class="mi">6</span>
-</span><span class='line'><span class="mi">8</span>
-</span><span class='line'><span class="mi">10</span>
-</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That’s exactly what we get when we hard code the block into our method using <em>each</em>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">times_two</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">array</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span><span class="o">|</span><span class="n">num</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">times_two</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'><span class="c1">#=&gt;</span>
-</span><span class='line'><span class="mi">2</span>
-</span><span class='line'><span class="mi">4</span>
-</span><span class='line'><span class="mi">6</span>
-</span><span class='line'><span class="mi">8</span>
-</span><span class='line'><span class="mi">10</span>
-</span><span class='line'><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Pretty cool, right! The <em>each</em> method allows us to user the elements in our array, and return the original array. As you can see, the <em>each</em> method is really easy to write, but a lot less flexible than the <em>yield</em> method. That is fine because we don’t want to keep writing code strings to pass in with our arguments every time we want to use a method.</p>
-
-<h2>What&rsquo;s going on with Map?</h2>
-
-<p>Let’s take a look at how <em>map</em> works. This is our generic <em>map</em> method that relies on <em>yield</em>, instead of the explicitly calling on <em>map</em>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">generic_map_array_method_with_iterator</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">new_array</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'>  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>  <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">array</span><span class="o">.</span><span class="n">length</span>
-</span><span class='line'>    <span class="n">new_array</span> <span class="o">&lt;&lt;</span> <span class="k">yield</span><span class="p">(</span><span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="n">new_array</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The difference here, from our generic <em>each</em> method, is that we’re creating a new array at the start of our method. Then, we shovel the results of our yielded block into the new array instead of just executing those blocks. At the end of the method, we return the new_array instead of the original array. So for the following argument and block this is what we’ll get:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">generic_map_array_method_with_iterator</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span> <span class="p">{</span><span class="o">|</span><span class="n">num</span><span class="o">|</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-</span><span class='line'><span class="c1">#=&gt;  [2, 4, 6, 8, 10]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>That’s exactly what we get when we hard code our block into a map/collect method</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">multiply_array_elements_by_two</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
-</span><span class='line'>  <span class="n">array</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">num</span><span class="o">|</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">}</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">multiply_array_elements_by_two</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'><span class="c1">#=&gt; [2, 4, 6, 8, 10]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Sweet!</p>
-
-<h3>TL;DR</h3>
-
-<p><em>Map</em> and <em>collect</em> are identical methods. If you want to perform some action on variables, call other methods depending on our array elements, etc., use <em>each</em>. If you want to return a new array based on some manipulation of your array, use <em>map</em>.</p>
-
-<p>Happy coding!</p>
 </div>
   
   
